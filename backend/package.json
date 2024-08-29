@@ -1,9 +1,12 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.ts",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npx tsc",
+    "start": "node dist/index.js",
+    "dev": "concurrently \"npx tsc --watch\" \"nodemon dist/index.js\""
   },
   "keywords": [],
   "author": "",
@@ -11,11 +14,22 @@
   "description": "",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "cloudinary": "^2.3.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
+    "datauri": "^4.1.0",
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.5.4",
-    "nodemon": "^3.1.4"
+    "mongoose": "^8.5.1",
+    "multer": "^1.4.5-lts.1",
+    "nodemon": "^3.1.4",
+    "sharp": "^0.33.4",
+    "socket.io": "^4.7.5"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.5.1",
+    "typescript": "^5.5.4"
   }
 }
