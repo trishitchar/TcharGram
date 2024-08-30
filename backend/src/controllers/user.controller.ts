@@ -109,4 +109,38 @@ export const logout = async(_:Request, res:Response) : Promise<Response> =>{
     }
 }
 
-// export const 
+export const getProfile = async (req: Request, res: Response): Promise<Response> => {
+    try {
+        const userId = req.params.id;
+        console.log(userId)
+        const user = await User.findById(userId);
+        // .populate({path:'posts', options:{sort:{createdAt: -1}}}).populate('bookmarks');
+        if(!user){
+            return res.status(404).json({
+                message: "user not found",
+                success: false
+            })
+        }
+        return res.status(200).json({
+            user,
+            success: true
+        })
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Server Error", success: false });
+    }
+}
+
+export const editProfile = async(req: any | Request, res:Response) : Promise<Response> =>{
+    try {
+        const userId = (req as any).id;
+        const {bio,gender} = req.body;
+        const profilePicture = req.file;
+        let cloudResponse;
+
+        return res.status(500).json({ message: "Server Error", success: false });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Server Error", success: false });
+    }
+}

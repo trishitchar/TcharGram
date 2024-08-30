@@ -16,6 +16,7 @@ const isTokenValid = async (
 ): Promise<void> => {
   try {
     const token = req.cookies.token;
+    console.log(token)
 
     if (!token) {
       res.status(401).json({
@@ -25,7 +26,7 @@ const isTokenValid = async (
       return;
     }
 
-    const decoded = jwt.verify(token, process.env.SECRET_KEY as string) as JwtPayload;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY as string) as JwtPayload;
 
     if (!decoded || !decoded.userId) {
       res.status(401).json({
