@@ -1,4 +1,4 @@
-import DataURIParser from "datauri/parser";
+import DataURIParser from "datauri/parser.js";
 import path from 'path'
 import { Request } from "express";
 
