@@ -1,6 +1,8 @@
 import { User } from '../models/user.model.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import getDataUri from '../utils/datauri.js';
+import Cloudinary from '../utils/cloudinary.js';
 export const register = async (req, res) => {
     try {
         const { username, email, password } = req.body;
@@ -118,33 +120,40 @@ export const getProfile = async (req, res) => {
     }
 };
 export const editProfile = async (req, res) => {
-    // try {
-    //     const userId = (req as any).userId; // Make sure this matches how you set the user ID in isTokenValid
-    //     const { bio, gender } = req.body;
-    //     const profilePicture = req.file;
-    //     let cloudResponse;
-    //     if (profilePicture) {
-    //         const fileUri = getDataUri(profilePicture);
-    //         cloudResponse = await Cloudinary.uploader.upload(fileUri);
-    //     }
-    //     const user = await User.findById(userId).select("-password");
-    //     if (!user) {
-    //         return res.status(404).json({
-    //             message: "User not found.",
-    //             success: false,
-    //         });
-    //     }
-    //     if (bio) user.bio = bio;
-    //     if (gender) user.gender = gender;
-    //     if (profilePicture && cloudResponse) user.profilePicture = cloudResponse.secure_url;
-    //     await user.save();
-    return res.status(200).json({
-        message: "Profile updated successfully.",
-        success: true,
-        // user,
-    });
-    // } catch (error) {
-    //     console.error(error);
-    //     return res.status(500).json({ message: "Server Error", success: false });
-    // }
+    try {
+        const userId = req.params.id;
+        const { bio, gender } = req.body;
+        const profilePicture = req.file;
+        let cloudResponse;
+        if (profilePicture) {
+            const fileUri = getDataUri(profilePicture);
+            const fileUriString = String(fileUri);
+            if (fileUriString) {
+                cloudResponse = await Cloudinary.uploader.upload(fileUriString, { resource_type: 'auto' });
+            }
+            else {
+                return res.status(400).json({ message: 'Failed to process image file.', success: false });
+            }
+        }
+        const user = await User.findById(userId).select('-password');
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.', success: false });
+        }
+        if (bio)
+            user.bio = bio;
+        if (gender)
+            user.gender = gender;
+        if (profilePicture && cloudResponse)
+            user.profilePicture = cloudResponse.secure_url;
+        await user.save();
+        return res.status(200).json({
+            message: 'Profile updated.',
+            success: true,
+            user,
+        });
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Server Error', success: false });
+    }
 };

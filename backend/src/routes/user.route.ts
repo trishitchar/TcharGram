@@ -11,7 +11,7 @@ router.route('/login').post(login);
 router.route('/test').post(isTokenValid,login);
 router.route('/logout').get(logout);
 router.route('/:id/profile').get(isTokenValid, getProfile);
-router.route('/profile/edit').post(isTokenValid, upload.single('profilePicture'), editProfile);
+router.post('/profile/edit/:id', isTokenValid, upload.single('profilePicture'), editProfile);
 // router.route('/suggested').get(isTokenValid, getSuggestedUsers);
 // router.route('/followorunfollow/:id').post(isTokenValid, followOrUnfollow);
 

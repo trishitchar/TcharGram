@@ -5,9 +5,6 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import connectDB from './utils/db.js';
 import userRoute from './routes/user.route.js'
-import path from 'path';
-import multer from 'multer';
-import { fileURLToPath } from 'url';
 
 const app = express();
 dotenv.config();
@@ -27,38 +24,7 @@ app.use(cors(corsAllowOrigin));
 // https://social-media-422a.onrender.com/
 
 
-// multer er jhamela suru
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const storage = multer.diskStorage({
-  destination: function (req: Request, file: any, cb: any) {
-    cb(null, path.join(__dirname, 'uploads')); 
-  },
-  filename: function (req: Request, file: any, cb: any) {
-    cb(null, `${Date.now()}-${file.originalname}`);
-  }
-});
-const upload = multer({ storage: storage });
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views")); 
-// Routes
 app.get('/', (req: Request, res: Response) => {
-  return res.render("homepage");
-});
-app.post("/upload", upload.single("profileImage"), (req: Request, res: Response) => {
-  console.log(req.body);
-  console.log(req.file);
-  return res.redirect("/");
-});
-app.post("/upload", upload.single("profileImage"), (req:Request,res:Response)=>{
-  console.log(req.body);
-  console.log(req.file);
-  return res.redirect("/")
-})
-// multer er jhamela ses
-
-
-app.get('/hi', (req: Request, res: Response) => {
   res.send('Hello, TypeScript with Node.js!');
 });
 
