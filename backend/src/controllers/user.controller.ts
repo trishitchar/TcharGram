@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken'
 import getDataUri from '../utils/datauri.js';
 import Cloudinary from '../utils/cloudinary.js';
+import mongoose from 'mongoose';
 
 export const register = async (req: Request, res: Response): Promise<Response> => {
     try {
@@ -133,30 +134,51 @@ export const getProfile = async (req: Request, res: Response): Promise<Response>
     }
 }
 
-export const editProfile = async (req: Request, res: Response): Promise<Response> => {
+interface AuthenticatedRequest extends Request {
+    userId?: string; // `currentUserId` attached by `isTokenValid`
+}
+
+// there's a flaw if I logged in with another so I've the token but still i can change other's profile description too, will impore later, have to check current id with the jwt decoced id, if same then proceed otherwise not
+export const editProfile = async (req: AuthenticatedRequest, res: Response): Promise<Response> => {
     try {
-      const userId = req.params.id;
+      const currentUserId = req.userId; 
+      const userId = req.params.id; 
       const { bio, gender } = req.body;
       const profilePicture = req.file;
+  
+      // Check if the current user is trying to edit their own profile
+      if (currentUserId !== userId) {
+        return res.status(403).json({
+          message: 'You are not authorized to edit this profile.',
+          success: false,
+        });
+      }
+  
       let cloudResponse;
   
+      // If a profile picture is uploaded, process and upload it to Cloudinary
       if (profilePicture) {
         const fileUri = getDataUri(profilePicture);
-        const fileUriString = String(fileUri);
   
-        if (fileUriString) {
-          cloudResponse = await Cloudinary.uploader.upload(fileUriString, { resource_type: 'auto' });
+        if (fileUri) {
+          cloudResponse = await Cloudinary.uploader.upload(fileUri, { resource_type: 'auto' });
         } else {
           return res.status(400).json({ message: 'Failed to process image file.', success: false });
         }
       }
   
+      // Fetch the user by their ID and exclude the password field
       const user = await User.findById(userId).select('-password');
   
+      // If the user does not exist, return a 404 error
       if (!user) {
-        return res.status(404).json({ message: 'User not found.', success: false });
+        return res.status(404).json({
+          message: 'User not found.',
+          success: false,
+        });
       }
   
+      // Update the user's profile fields if they are provided
       if (bio) user.bio = bio;
       if (gender) user.gender = gender;
       if (profilePicture && cloudResponse) user.profilePicture = cloudResponse.secure_url;
@@ -164,12 +186,78 @@ export const editProfile = async (req: Request, res: Response): Promise<Response
       await user.save();
   
       return res.status(200).json({
-        message: 'Profile updated.',
+        message: 'Profile updated successfully.',
         success: true,
         user,
       });
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: 'Server Error', success: false });
+      console.error('Error updating profile:', error);
+      return res.status(500).json({
+        message: 'Server error. Please try again later.',
+        success: false,
+      });
+    }
+  };
+
+  
+  export const followOrUnfollow = async (req: AuthenticatedRequest, res: Response): Promise<Response> => {
+    try {
+      const currentUserId = req.userId; 
+      const targetUserId = req.params.id;
+  
+      if (!currentUserId) {
+        return res.status(401).json({ message: 'User not authenticated', success: false });
+      }
+  
+      if (currentUserId === targetUserId) {
+        return res.status(400).json({
+          message: 'You cannot follow or unfollow yourself.',
+          success: false,
+        });
+      }
+  
+      const targetUserObjectId = new mongoose.Types.ObjectId(targetUserId);
+  
+      const [currentUser, targetUser] = await Promise.all([
+        User.findById(currentUserId),
+        User.findById(targetUserObjectId),
+      ]);
+  
+      if (!currentUser || !targetUser) {
+        return res.status(404).json({
+          message: 'User not found.',
+          success: false,
+        });
+      }
+  
+      const isFollowing = currentUser.following.includes(targetUserObjectId);
+  
+      if (isFollowing) {
+          // If already following, unfollow
+        await Promise.all([
+          User.updateOne({ _id: currentUserId }, { $pull: { following: targetUserObjectId } }),
+          User.updateOne({ _id: targetUserObjectId }, { $pull: { followers: currentUserId } }),
+        ]);
+        return res.status(200).json({
+          message: 'Unfollowed successfully.',
+          success: true,
+        });
+      } else {
+        // If not following, follow
+        await Promise.all([
+          User.updateOne({ _id: currentUserId }, { $push: { following: targetUserObjectId } }),
+          User.updateOne({ _id: targetUserObjectId }, { $push: { followers: currentUserId } }),
+        ]);
+        return res.status(200).json({
+          message: 'Followed successfully.',
+          success: true,
+        });
+      }
+    } catch (error) {
+      console.error('Error in follow/unfollow operation:', error);
+      return res.status(500).json({
+        message: 'An error occurred while processing the follow/unfollow request.',
+        success: false,
+      });
     }
   };
