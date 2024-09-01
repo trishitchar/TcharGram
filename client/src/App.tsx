@@ -1,14 +1,21 @@
-import './App.css'
-import { Button } from './components/ui/button'
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Login from './pages/Login';
+import Landing from './pages/Landing';
+import Register from './pages/Register';
+import Profile from './pages/Profile';
+import NotFound from './pages/NotFound';
 
-function App() {
-
+const App: React.FC = () => {
   return (
-    <div>
-      <h1 className='bg-red-400 font-bold'> lol hi</h1>
-      <Button>lol shadcn</Button>
-    </div>
-  )
-}
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/feed" element={<Landing />} />
+      <Route path="/profile/:id" element={<Profile />} />
+      <Route path='error' element={<NotFound/>} />
+    </Routes>
+  );
+};
 
-export default App
+export default App;
