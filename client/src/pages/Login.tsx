@@ -8,7 +8,7 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const navigate =  useNavigate();
+  const navigate = useNavigate();
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -25,16 +25,21 @@ const Login: React.FC = () => {
           withCredentials: true,
         }
       );
-      console.log(response);
-      // Handle successful login here (e.g., redirect, save token)
-      if(response.data.success){
+
+      console.log(response)
+      if (response.data.success) {
         toast.success(response.data.message);
-        const { user } = response.data;
-        console.log(user)
+        const { token, user } = response.data;
+
+        localStorage.setItem('token', token);
+        // console.log(token)
+
+        console.log(user);
         navigate('/feed');
       }
-    } catch (error:any) {
+    } catch (error: any) {
       console.error('Login failed:', error);
+      toast.error('Login failed. Please check your credentials and try again.');
       setError('Login failed. Please check your credentials and try again.');
     }
   };

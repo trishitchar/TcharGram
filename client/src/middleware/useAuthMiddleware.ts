@@ -15,12 +15,12 @@ export const useAuthMiddleware = () => {
 
   useEffect(() => {
     const token = getCookie('token');
-    // console.log(token);
+    console.log(token);
 
-    if (window.location.pathname === '/' && token) {
+    if ((window.location.pathname === '/login'  || window.location.pathname === '/register') && token) {
       navigate('/feed');
       return;
-    } else if (!token && window.location.pathname !== '/') {
+    } else if (!token && window.location.pathname !== '/feed') {
       navigate('/');
       return;
     }

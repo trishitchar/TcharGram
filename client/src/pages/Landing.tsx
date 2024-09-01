@@ -1,31 +1,12 @@
 // src/pages/Landing.tsx
+import Header from '@/components/common/Header';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { useAuthMiddleware } from '@/middleware/useAuthMiddleware';
 
 const Landing: React.FC = () => {
-    // useAuthMiddleware()
-    const navigate = useNavigate(); 
-
-    const handleLoginClick = () => {
-        navigate('/login'); 
-    };
-
-    const handleSignUpClick = () => {
-        navigate('/signup');
-    };
 
   return (
-    <div className="w-full h-full">
-      <div className="flex justify-between bg-gray-500">
-        <div>logo</div>
-        <div>sitename</div>
-        <div>
-          <Button onClick={handleLoginClick}>Login</Button>
-          <Button onClick={handleSignUpClick}>SignUp</Button>
-        </div>
-      </div>
+    <div className="">
+      <Header/>
       <div className="bg-pink-400">
         <div>
           main content in short

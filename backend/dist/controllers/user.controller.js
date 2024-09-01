@@ -63,7 +63,9 @@ export const login = async (req, res) => {
                 success: false,
             });
         }
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, { expiresIn: '15d' });
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, {
+            expiresIn: '15d',
+        });
         // Format user object
         const userInfo = {
             _id: user._id,
@@ -73,12 +75,17 @@ export const login = async (req, res) => {
             bio: user.bio,
             followers: user.followers,
             following: user.following,
-            // posts: populatedPosts
         };
-        return res.cookie('token', token, { httpOnly: true, sameSite: 'strict', maxAge: 24 * 60 * 60 * 1000 }).json({
+        res.cookie('token', token, {
+            httpOnly: false,
+            sameSite: 'strict',
+            maxAge: 24 * 60 * 60 * 1000,
+        });
+        return res.json({
             message: `Welcome back ${user.username}`,
             success: true,
-            user: userInfo
+            token,
+            user: userInfo,
         });
     }
     catch (error) {
