@@ -66,7 +66,7 @@ export const login = async (req, res) => {
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, {
             expiresIn: '15d',
         });
-        // Format user object
+        // Format user object again
         const userInfo = {
             _id: user._id,
             username: user.username,
@@ -185,7 +185,7 @@ export const editProfile = async (req, res) => {
 };
 export const followOrUnfollow = async (req, res) => {
     try {
-        const currentUserId = req.userId;
+        const currentUserId = req.userId; //req.userId will sent by the middleware `istoken valid`
         const targetUserId = req.params.id;
         if (!currentUserId) {
             return res.status(401).json({ message: 'User not authenticated', success: false });
@@ -235,6 +235,28 @@ export const followOrUnfollow = async (req, res) => {
         console.error('Error in follow/unfollow operation:', error);
         return res.status(500).json({
             message: 'An error occurred while processing the follow/unfollow request.',
+            success: false,
+        });
+    }
+};
+export const getSuggestedUsers = async (req, res) => {
+    try {
+        const suggestedUsers = await User.find({ _id: { $ne: req.userId } }).select('-password');
+        if (!suggestedUsers || suggestedUsers.length === 0) {
+            return res.status(404).json({
+                message: 'No suggested users found.',
+                success: false,
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            users: suggestedUsers,
+        });
+    }
+    catch (error) {
+        console.error('Error fetching suggested users:', error);
+        return res.status(500).json({
+            message: 'An error occurred while fetching suggested users.',
             success: false,
         });
     }

@@ -55,12 +55,12 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
       return res.status(401).json({
         message: "Something is missing, please check!",
         success: false,
-      });
+      }); 
     }
 
     let user = await User.findOne({ email });
 
-    if (!user) {
+    if (!user) { 
       return res.status(401).json({
         message: "Incorrect email or password",
         success: false,
@@ -79,7 +79,7 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
       expiresIn: '15d',
     });
 
-    // Format user object
+    // Format user object again
     const userInfo = {
       _id: user._id,
       username: user.username,
@@ -209,64 +209,86 @@ export const editProfile = async (req: AuthenticatedRequest, res: Response): Pro
   };
 
   
-  export const followOrUnfollow = async (req: AuthenticatedRequest, res: Response): Promise<Response> => {
-    try {
-      const currentUserId = req.userId; 
-      const targetUserId = req.params.id;
-  
-      if (!currentUserId) {
-        return res.status(401).json({ message: 'User not authenticated', success: false });
-      }
-  
-      if (currentUserId === targetUserId) {
-        return res.status(400).json({
-          message: 'You cannot follow or unfollow yourself.',
-          success: false,
-        });
-      }
-  
-      const targetUserObjectId = new mongoose.Types.ObjectId(targetUserId);
-  
-      const [currentUser, targetUser] = await Promise.all([
-        User.findById(currentUserId),
-        User.findById(targetUserObjectId),
-      ]);
-  
-      if (!currentUser || !targetUser) {
-        return res.status(404).json({
-          message: 'User not found.',
-          success: false,
-        });
-      }
-  
-      const isFollowing = currentUser.following.includes(targetUserObjectId);
-  
-      if (isFollowing) {
-          // If already following, unfollow
-        await Promise.all([
-          User.updateOne({ _id: currentUserId }, { $pull: { following: targetUserObjectId } }),
-          User.updateOne({ _id: targetUserObjectId }, { $pull: { followers: currentUserId } }),
-        ]);
-        return res.status(200).json({
-          message: 'Unfollowed successfully.',
-          success: true,
-        });
-      } else {
-        // If not following, follow
-        await Promise.all([
-          User.updateOne({ _id: currentUserId }, { $push: { following: targetUserObjectId } }),
-          User.updateOne({ _id: targetUserObjectId }, { $push: { followers: currentUserId } }),
-        ]);
-        return res.status(200).json({
-          message: 'Followed successfully.',
-          success: true,
-        });
-      }
-    } catch (error) {
-      console.error('Error in follow/unfollow operation:', error);
-      return res.status(500).json({
-        message: 'An error occurred while processing the follow/unfollow request.',
+export const followOrUnfollow = async (req: AuthenticatedRequest, res: Response): Promise<Response> => {
+  try {
+    const currentUserId = req.userId; //req.userId will sent by the middleware `istoken valid`
+    const targetUserId = req.params.id;
+
+    if (!currentUserId) {
+      return res.status(401).json({ message: 'User not authenticated', success: false });
+    }
+
+    if (currentUserId === targetUserId) {
+      return res.status(400).json({
+        message: 'You cannot follow or unfollow yourself.',
         success: false,
       });
     }
-  };
+
+    const targetUserObjectId = new mongoose.Types.ObjectId(targetUserId);
+
+    const [currentUser, targetUser] = await Promise.all([
+      User.findById(currentUserId),
+      User.findById(targetUserObjectId),
+    ]);
+
+    if (!currentUser || !targetUser) {
+      return res.status(404).json({
+        message: 'User not found.',
+        success: false,
+      });
+    }
+
+    const isFollowing = currentUser.following.includes(targetUserObjectId);
+
+    if (isFollowing) {
+        // If already following, unfollow
+      await Promise.all([
+        User.updateOne({ _id: currentUserId }, { $pull: { following: targetUserObjectId } }),
+        User.updateOne({ _id: targetUserObjectId }, { $pull: { followers: currentUserId } }),
+      ]);
+      return res.status(200).json({
+        message: 'Unfollowed successfully.',
+        success: true,
+      });
+    } else {
+      // If not following, follow
+      await Promise.all([
+        User.updateOne({ _id: currentUserId }, { $push: { following: targetUserObjectId } }),
+        User.updateOne({ _id: targetUserObjectId }, { $push: { followers: currentUserId } }),
+      ]);
+      return res.status(200).json({
+        message: 'Followed successfully.',
+        success: true,
+      });
+    }
+  } catch (error) {
+    console.error('Error in follow/unfollow operation:', error);
+    return res.status(500).json({
+      message: 'An error occurred while processing the follow/unfollow request.',
+      success: false,
+    });
+  }
+};
+
+export const getSuggestedUsers = async(req:AuthenticatedRequest ,res:Response): Promise<Response> => {
+  try {
+    const suggestedUsers = await User.find({ _id: { $ne: req.userId } }).select('-password');
+    if (!suggestedUsers || suggestedUsers.length === 0) {
+      return res.status(404).json({
+        message: 'No suggested users found.',
+        success: false,
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      users: suggestedUsers,
+    });
+  } catch (error) {
+    console.error('Error fetching suggested users:', error);
+    return res.status(500).json({
+      message: 'An error occurred while fetching suggested users.',
+      success: false,
+    });
+  }
+};

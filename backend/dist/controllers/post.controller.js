@@ -1,2 +1,2 @@
-"use strict";
-// post related stuff
+export {};
+// Function to add a new post
