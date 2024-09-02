@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import sharp from "sharp";
-import { Types } from 'mongoose'; 
+import mongoose, { Types } from 'mongoose'; 
 import Cloudinary from "../utils/cloudinary.js";
 import { Post, IPost } from "../models/post.model.js";  
 import { User, IUser } from "../models/user.model.js";  
@@ -302,3 +302,35 @@ export const deleteComment = async (req: AuthenticatedRequest, res: Response): P
     }
 };
 
+export const bookmarkPost = async (req: AuthenticatedRequest, res: Response): Promise<Response> => {
+    try {
+        const currentUserId = req.userId; 
+        const postId = req.params.id; 
+
+        const post = await Post.findById(postId);
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found', success: false });
+        }
+
+        const user = await User.findById(currentUserId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found', success: false });
+        }
+
+        // Check if the post is already bookmarked by the user
+        const isBookmarked = user.bookmarks.some((bookmarkId) => bookmarkId.equals(new mongoose.Types.ObjectId(post._id as Types.ObjectId)));
+
+        if (isBookmarked) {
+            // Remove the bookmark if it already exists
+            await user.updateOne({ $pull: { bookmarks: post._id } });
+            return res.status(200).json({ type: 'unsaved', message: 'Post removed from bookmarks', success: true });
+        } else {
+            // Add the bookmark if it doesn't exist
+            await user.updateOne({ $addToSet: { bookmarks: post._id } });
+            return res.status(200).json({ type: 'saved', message: 'Post bookmarked', success: true });
+        }
+    } catch (error: any) {
+        console.error('Error bookmarking the post:', error.message);
+        return res.status(500).json({ message: 'Server error', success: false });
+    }
+};

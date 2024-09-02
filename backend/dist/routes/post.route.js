@@ -1,7 +1,7 @@
 import express from 'express';
 import isTokenValid from '../middlewares/isTokenValid.js';
 import upload from '../middlewares/multer.js';
-import { addComment, addNewPost, currentUserPost, deleteComment, deletePost, dislikePost, getAllPost, getCommentsOfPost, likePost } from '../controllers/post.controller.js';
+import { addComment, addNewPost, bookmarkPost, currentUserPost, deleteComment, deletePost, dislikePost, getAllPost, getCommentsOfPost, likePost } from '../controllers/post.controller.js';
 const router = express.Router();
 router.route('/addpost').post(isTokenValid, upload.single('image'), addNewPost);
 router.route('/deletepost/:id').post(isTokenValid, deletePost);
@@ -13,4 +13,5 @@ router.route('/dislikepost/:id').post(isTokenValid, dislikePost);
 router.route('/addcomment/:id').post(isTokenValid, addComment);
 router.route('/getcommentsOfpost/:id').post(isTokenValid, getCommentsOfPost);
 router.route('/deletecomment/:id').post(isTokenValid, deleteComment);
+router.route('/bookmarkpost/:id').post(isTokenValid, bookmarkPost);
 export default router;
