@@ -16,7 +16,7 @@ const isTokenValid = async (
 ): Promise<void> => {
   try {
     const token = req.cookies.token;
-    console.log(token)
+    // console.log(token)
 
     if (!token) {
       res.status(401).json({

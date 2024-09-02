@@ -86,3 +86,33 @@ export const getAllPost = async (req: Request, res: Response): Promise<Response>
     }
 };
 
+export const currentUserPost = async (req: AuthenticatedRequest, res: Response): Promise<Response> => {
+    try {
+        const currentUserId = req.userId;
+
+        // Fetch posts by the current user
+        const posts = await Post.find({ author: currentUserId })
+            .sort({ createdAt: -1 }) // Sort posts by creation date in descending order
+            .populate({ path: 'author', select: 'username profilePicture' }) // Populate author details
+            // .populate({
+            //     path: 'comments', // Populate comments and their authors
+            //     populate: {
+            //         path: 'author',
+            //         select: 'username profilePicture',
+            //     },
+            // });
+
+        // Sort comments within each post if necessary
+        posts.forEach(post => {
+            if (post.comments && Array.isArray(post.comments)) {
+                post.comments.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+            }
+        });
+
+        // Return the posts with a success message
+        return res.status(200).json({ posts, success: true });
+    } catch (error: any) {
+        console.error("Error getting user's posts:", error.message);
+        return res.status(500).json({ message: 'Failed to retrieve user posts. Please try again.', success: false });
+    }
+};
