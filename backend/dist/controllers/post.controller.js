@@ -48,6 +48,33 @@ export const addNewPost = async (req, res) => {
         return res.status(500).json({ message: 'Server Error', success: false });
     }
 };
+export const deletePost = async (req, res) => {
+    try {
+        const currentUserId = req.userId;
+        // this postId is only the key
+        const postId = req.params.id;
+        // this post is an entire object id
+        const post = await Post.findById(postId);
+        if (!post) {
+            return res.status(404).json({
+                message: 'Post not found',
+                success: false
+            });
+        }
+        if (post.author.toString() !== currentUserId) {
+            return res.status(403).json({ message: 'Unauthorized person cannott delete', success: false });
+        }
+        // so we should not pass the whole post obj, rather give the postId
+        await Post.findByIdAndDelete(postId);
+        await User.findByIdAndUpdate(currentUserId, { $pull: { posts: postId } });
+        await Comment.deleteMany({ post: postId });
+        return res.status(200).json({ message: 'Post deleted', success: true });
+    }
+    catch (error) {
+        console.error("Error deleting post:", error.message);
+        return res.status(500).json({ message: 'Server error', success: false });
+    }
+};
 // Corrected getAllPost function with sorting handled separately
 export const getAllPost = async (req, res) => {
     try {
@@ -180,6 +207,55 @@ export const addComment = async (req, res) => {
     }
     catch (error) {
         console.error("Error adding comment:", error.message);
+        return res.status(500).json({ message: 'Server error', success: false });
+    }
+};
+export const getCommentsOfPost = async (req, res) => {
+    try {
+        const postId = req.params.id;
+        const comments = await Comment.find({ post: postId })
+            .populate('author', 'username profilePicture');
+        if (!comments || comments.length === 0) {
+            return res.status(404).json({
+                message: 'No comment found for this post',
+                success: false
+            });
+        }
+        return res.status(200).json({
+            comments,
+            success: true
+        });
+    }
+    catch (error) {
+        console.error("Error fetching comments:", error.message);
+        return res.status(500).json({ message: 'Server error', success: false });
+    }
+};
+export const deleteComment = async (req, res) => {
+    try {
+        const commentId = req.params.id; // Get the comment ID from the request parameters
+        const currentUserId = req.userId; // Get the user ID from the authenticated request
+        // Find the comment by ID
+        const comment = await Comment.findById(commentId);
+        if (!comment)
+            return res.status(404).json({ message: 'Comment not found', success: false });
+        // Check if the user is the author of the comment
+        if (comment.author.toString() !== currentUserId) {
+            return res.status(403).json({ message: 'Unauthorized to delete this comment', success: false });
+        }
+        // Find the post associated with the comment
+        const post = await Post.findById(comment.post);
+        if (!post)
+            return res.status(404).json({ message: 'Associated post not found', success: false });
+        // Remove the comment ID from the post's comments array
+        post.comments = post.comments.filter((id) => id.toString() !== commentId);
+        await post.save();
+        // Delete the comment from the database
+        await Comment.findByIdAndDelete(commentId);
+        return res.status(200).json({ message: 'Comment deleted successfully', success: true });
+    }
+    catch (error) {
+        console.error('Error deleting comment:', error.message);
         return res.status(500).json({ message: 'Server error', success: false });
     }
 };
