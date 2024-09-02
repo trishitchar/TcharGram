@@ -3,6 +3,7 @@ import { Types } from 'mongoose';
 import Cloudinary from "../utils/cloudinary.js";
 import { Post } from "../models/post.model.js";
 import { User } from "../models/user.model.js";
+import { Comment } from '../models/comment.model.js';
 // Function to add a new post
 export const addNewPost = async (req, res) => {
     try {
@@ -96,5 +97,89 @@ export const currentUserPost = async (req, res) => {
     catch (error) {
         console.error("Error getting user's posts:", error.message);
         return res.status(500).json({ message: 'Failed to retrieve user posts. Please try again.', success: false });
+    }
+};
+export const likePost = async (req, res) => {
+    try {
+        const currentUserId = req.userId;
+        const postId = req.params.id;
+        const post = await Post.findById(postId);
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found', success: false });
+        }
+        // Add like to the post - only one by any user
+        await post.updateOne({ $addToSet: { likes: currentUserId } });
+        // Get the user who liked the post
+        const user = await User.findById(currentUserId).select('username profilePicture');
+        // Notify the post owner
+        const postOwnerId = post.author.toString();
+        // if (postOwnerId !== userId) {
+        //     const notification = {
+        //         type: 'like',
+        //         userId,
+        //         userDetails: user,
+        //         postId,
+        //         message: 'Your post was liked',
+        //     };
+        //     const postOwnerSocketId = getReceiverSocketId(postOwnerId);
+        //     io.to(postOwnerSocketId).emit('notification', notification);
+        // }
+        return res.status(200).json({ message: 'Post liked', success: true });
+    }
+    catch (error) {
+        console.error("Error liking the post:", error.message);
+        return res.status(500).json({ message: 'Server error', success: false });
+    }
+};
+export const dislikePost = async (req, res) => {
+    try {
+        const currentUserId = req.userId;
+        const postId = req.params.id;
+        const post = await Post.findById(postId);
+        if (!post)
+            return res.status(404).json({ message: 'Post not found', success: false });
+        // Remove like from the post
+        await post.updateOne({ $pull: { likes: currentUserId } });
+        // Get the user who disliked the post
+        const user = await User.findById(currentUserId).select('username profilePicture');
+        // Notify the post owner
+        const postOwnerId = post.author.toString();
+        // if (postOwnerId !== currentUserId) {
+        //     const notification = {
+        //         type: 'dislike',
+        //         currentUserId,
+        //         userDetails: user,
+        //         postId,
+        //         message: 'Your post was disliked',
+        //     };
+        //     const postOwnerSocketId = getReceiverSocketId(postOwnerId);
+        //     io.to(postOwnerSocketId).emit('notification', notification);
+        // }
+        return res.status(200).json({ message: 'Post disliked', success: true });
+    }
+    catch (error) {
+        console.error("Error disliking the post:", error.message);
+        return res.status(500).json({ message: 'Server error', success: false });
+    }
+};
+export const addComment = async (req, res) => {
+    try {
+        const currentUserId = req.userId;
+        const postId = req.params.id;
+        const { text } = req.body;
+        if (!text)
+            return res.status(400).json({ message: 'Commnets Text is required', success: false });
+        const post = await Post.findById(postId);
+        if (!post)
+            return res.status(404).json({ message: 'Post not found', success: false });
+        const comment = await Comment.create({ text, author: currentUserId, post: postId });
+        await comment.populate({ path: 'author', select: 'username profilePicture' });
+        post.comments.push(comment._id);
+        await post.save();
+        return res.status(201).json({ message: 'Comment added', comment, success: true });
+    }
+    catch (error) {
+        console.error("Error adding comment:", error.message);
+        return res.status(500).json({ message: 'Server error', success: false });
     }
 };
