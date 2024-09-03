@@ -211,7 +211,7 @@ export const editProfile = async (req: AuthenticatedRequest, res: Response): Pro
   
 export const followOrUnfollow = async (req: AuthenticatedRequest, res: Response): Promise<Response> => {
   try {
-    const currentUserId = req.userId; //req.userId will sent by the middleware `istoken valid`
+    const currentUserId = req.userId;
     const targetUserId = req.params.id;
 
     if (!currentUserId) {

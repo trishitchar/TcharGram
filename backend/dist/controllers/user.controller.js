@@ -185,7 +185,7 @@ export const editProfile = async (req, res) => {
 };
 export const followOrUnfollow = async (req, res) => {
     try {
-        const currentUserId = req.userId; //req.userId will sent by the middleware `istoken valid`
+        const currentUserId = req.userId;
         const targetUserId = req.params.id;
         if (!currentUserId) {
             return res.status(401).json({ message: 'User not authenticated', success: false });
