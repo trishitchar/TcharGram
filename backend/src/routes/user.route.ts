@@ -14,6 +14,7 @@ router.route('/profile/:id').get(isTokenValid, getProfile);
 router.route('/testprofile/:id').get(getProfile);
 router.post('/profile/edit/:id', isTokenValid, upload.single('profilePicture'), editProfile);
 router.route('/suggested').get(isTokenValid, getSuggestedUsers);
+router.route('/testsuggested').get(getSuggestedUsers);
 router.route('/followorunfollow/:id').post(isTokenValid, followOrUnfollow);
 
 export default router;
