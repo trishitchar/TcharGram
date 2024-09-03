@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/common/Header';
+import { userBaseURL } from '@/data/data';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -17,7 +18,7 @@ const Login: React.FC = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:8080/api/user/login',
+        `${userBaseURL}/login`,
         { email, password },
         {
           headers: {

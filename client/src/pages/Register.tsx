@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/common/Header';
+import { userBaseURL } from '@/data/data';
 
 const Signup: React.FC = () => {
   const [username, setUsername] = useState<string>('');
@@ -24,7 +25,7 @@ const Signup: React.FC = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:8080/api/user/register',
+        `${userBaseURL}/register`,
         { username, email, password },
         {
           headers: {

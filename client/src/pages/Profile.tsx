@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { userBaseURL } from '@/data/data';
 
 const Profile: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -13,7 +14,7 @@ const Profile: React.FC = () => {
     const fetchProfile = async () => {
       if (id) {
         try {
-          const response = await axios.get(`http://localhost:8080/api/user/${id}/testprofile`);
+          const response = await axios.get(`${userBaseURL}/profile/${id}`);
           if (response.data.success) {
             setUser(response.data.user);
           } else {

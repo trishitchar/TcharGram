@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { decodeToken } from '../middleware/DecodedToken';
+import { userBaseURL } from '@/data/data';
 
 interface User {
   _id: string;
@@ -29,7 +30,7 @@ const SuggestionPage: React.FC = () => {
     const currentUserId = decodeToken();
     if (currentUserId) {
       try {
-        const response = await axios.get<{ user: User; success: boolean }>(`http://localhost:8080/api/user/profile/${currentUserId}`, {
+        const response = await axios.get<{ user: User; success: boolean }>(`${userBaseURL}/profile/${currentUserId}`, {
           withCredentials: true
         });
         setCurrentUser(response.data.user);
@@ -42,7 +43,7 @@ const SuggestionPage: React.FC = () => {
 
   const fetchSuggestedUsers = async () => {
     try {
-      const response = await axios.get<{ users: User[] }>('http://localhost:8080/api/user/testsuggested', {
+      const response = await axios.get<{ users: User[] }>(`${userBaseURL}/suggested`, {
         withCredentials: true
       });
       const suggestedUsers = response.data.users.map((user: User) => ({
@@ -58,7 +59,7 @@ const SuggestionPage: React.FC = () => {
   const followUnfollow = async (targetUserId: string) => {
     try {
       const response = await axios.post<{ success: boolean }>(
-        `http://localhost:8080/api/user/followorunfollow/${targetUserId}`,
+        `${userBaseURL}/followorunfollow/${targetUserId}`,
         {},
         { withCredentials: true }
       );
