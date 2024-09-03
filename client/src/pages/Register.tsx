@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Input } from '@/components/ui/input';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import Header from '@/components/common/Header';
 
 const Signup: React.FC = () => {
   const [username, setUsername] = useState<string>('');
@@ -57,6 +58,8 @@ const Signup: React.FC = () => {
   };
 
   return (
+    <div>
+      <Header/>
     <div className="max-w-md mx-auto mt-10 p-4 border border-gray-300 rounded-lg shadow-md">
       <h1 className="text-2xl font-bold mb-4">Signup</h1>
       {error && <div className="mb-4 text-red-500">{error}</div>}
@@ -69,7 +72,7 @@ const Signup: React.FC = () => {
           placeholder="Username"
           required
           className="w-full p-2 border border-gray-300 rounded-md"
-        />
+          />
         <Input
           type="email"
           name="email"
@@ -96,6 +99,7 @@ const Signup: React.FC = () => {
         </button>
       </form>
     </div>
+</div>
   );
 };
 

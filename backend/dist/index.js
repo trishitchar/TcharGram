@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(urlencoded({ extended: true }));
 const corsAllowOrigin = {
-    origin: ['http://localhost:5173', 'https://ai-flix.onrender.com', 'https://aiflix-tc.vercel.app'],
+    origin: ['http://localhost:5173', 'https://social-media-teal-seven.vercel.app/', 'https://social-media-422a.onrender.com/'],
     credentials: true
 };
 app.use(cors(corsAllowOrigin));

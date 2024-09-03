@@ -10,15 +10,24 @@ const Header: React.FC = () => {
     };
 
     const handleSignUpClick = () => {
-        navigate('/signup');
+        navigate('/register');
     };
+
+    const handleFeedClick = () => {
+        navigate('/feed');
+    };
+
+    // const handleSignUpClick = () => {
+    //     navigate('/signup');
+    // };
     
     return <div className="flex justify-between bg-gray-600 items-center p-2 text-2xl font-bold">
         <div>logo</div>
-        <div>website</div>
-        <div >
-            <Button  className="mx-2" onClick={handleLoginClick}>Login</Button>
+        <div>testing button</div>
+        <div className="flex justify-between gap-2">
+            <Button onClick={handleLoginClick}>Login</Button>
             <Button onClick={handleSignUpClick}>SignUp</Button>
+            <Button onClick={handleFeedClick}>Feed</Button>
         </div>
     </div>
 }

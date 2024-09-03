@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Input } from '@/components/ui/input';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import Header from '@/components/common/Header';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -54,6 +55,10 @@ const Login: React.FC = () => {
   };
 
   return (
+    <div>
+
+    
+      <Header/>
     <div className="max-w-md mx-auto mt-10 p-4 border border-gray-300 rounded-lg shadow-md">
       <h1 className="text-2xl font-bold mb-4">Login</h1>
       {error && <div className="mb-4 text-red-500">{error}</div>}
@@ -83,6 +88,7 @@ const Login: React.FC = () => {
           Login
         </button>
       </form>
+      </div>
     </div>
   );
 };
