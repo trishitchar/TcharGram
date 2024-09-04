@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { decodeToken } from '../middleware/DecodedToken';
+import { decodeToken } from '../../middleware/DecodedToken';
 import { userBaseURL } from '@/data/data';
 
 interface User {

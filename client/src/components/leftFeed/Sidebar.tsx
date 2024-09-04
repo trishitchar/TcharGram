@@ -5,10 +5,10 @@ import { MdOutlineExplore } from "react-icons/md";
 import { BsFillCameraReelsFill } from "react-icons/bs";
 import { TbMessageFilled } from "react-icons/tb";
 import { FaRegHeart } from "react-icons/fa";
-import { CgProfile } from "react-icons/cg";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { userBaseURL } from '@/data/data';
 import axios from "axios";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 type SidebarItem = {
   icon: JSX.Element;
@@ -24,7 +24,12 @@ const Sidebar: React.FC = () => {
     { icon: <TbMessageFilled />, text: "Messages" },
     { icon: <FaRegHeart />, text: "Notifications" },
     { icon: <IoCreateOutline />, text: "Create" },
-    { icon: <CgProfile />, text: "Profile" },
+    { 
+      icon: 
+      <Avatar>
+        <AvatarImage src="https://cdn-icons-png.flaticon.com/512/1144/1144760.png" alt="lol"></AvatarImage>
+        <AvatarFallback>TC</AvatarFallback>
+      </Avatar>, text: "Profile" },
     { icon: <IoLogOutOutline />, text: "LogOut" },
   ];
 
