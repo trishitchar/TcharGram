@@ -5,7 +5,6 @@ const MainFeed:React.FC = () => {
     <div className="flex-1 overflow-y-auto">
       <div className="max-w-xl mx-auto mt-8">
         <div className="flex space-x-4 mb-4 overflow-x-auto">
-          {/* Story circles */}
           {[...Array(8)].map((_, i) => (
             <div key={i} className="w-16 h-16 rounded-full bg-gray-300 flex-shrink-0"></div>
           ))}

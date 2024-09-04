@@ -28,6 +28,7 @@ const SuggestionPage: React.FC = () => {
 
   const fetchCurrentUser = async () => {
     const currentUserId = decodeToken();
+    console.log("currentUserId"+currentUserId);
     if (currentUserId) {
       try {
         const response = await axios.get<{ user: User; success: boolean }>(`${userBaseURL}/profile/${currentUserId}`, {

@@ -1,6 +1,8 @@
 import React from "react";
 import { Button } from "../ui/button";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { userBaseURL } from "@/data/data";
 
 const Header: React.FC = () => {
     const navigate = useNavigate(); 
@@ -17,9 +19,14 @@ const Header: React.FC = () => {
         navigate('/feed');
     };
 
-    // const handleSignUpClick = () => {
-    //     navigate('/signup');
-    // };
+    const handleLogoutClick =async () => {
+        try {
+            const response = await axios.get(`${userBaseURL}/logout`);
+            console.log("response handlelogoutclick " + response)
+        } catch (error) {
+            
+        }
+    };
     
     return <div className="flex justify-between bg-gray-600 items-center p-2 text-2xl font-bold">
         <div>logo</div>
@@ -28,6 +35,7 @@ const Header: React.FC = () => {
             <Button onClick={handleLoginClick}>Login</Button>
             <Button onClick={handleSignUpClick}>SignUp</Button>
             <Button onClick={handleFeedClick}>Feed</Button>
+            <Button onClick={() => handleLogoutClick()}>Logout</Button>
         </div>
     </div>
 }

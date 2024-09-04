@@ -92,7 +92,7 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
 
     res.cookie('token', token, {
       httpOnly: false,
-      sameSite: 'lax',
+      // sameSite: 'lax',
       maxAge: 24 * 60 * 60 * 1000,
     });
 
@@ -111,6 +111,11 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
 
 export const logout = async(_:Request, res:Response) : Promise<Response> =>{
     try {
+      res.cookie('token',"", {
+        httpOnly: false,
+        // sameSite: 'lax',
+        maxAge: 0
+      });
         return res.cookie("token", "", {maxAge:0}).json({
             message: 'logout done',
             success: 'true'

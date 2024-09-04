@@ -1,6 +1,6 @@
 // import Header from '@/components/common/Header';
 import Header from '@/components/common/Header';
-import MainFeed from '@/components/MainFeed';
+import MainFeed from '@/components/middleFeed/MainFeed';
 import Sidebar from '@/components/Sidebar';
 import SuggestionPage from '@/components/SuggestionPage';
 // import { Sidebar } from 'lucide-react';
