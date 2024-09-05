@@ -78,23 +78,28 @@ export const deletePost = async (req, res) => {
 // Corrected getAllPost function with sorting handled separately
 export const getAllPost = async (req, res) => {
     try {
-        // Fetch posts, populating 'author' and 'comments' without the nested sort
+        // Pagination parameters
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+        // Fetch posts, populating 'author' and 'comments'
         const posts = await Post.find()
-            .sort({ createdAt: -1 })
-            .populate({ path: 'author', select: 'username profilePicture' });
-        // .populate({
-        //     path: 'comments',
-        //     populate: { path: 'author', select: 'username profilePicture' },
-        // });
-        // Optional: Manually sort comments within each post if needed
-        posts.forEach(post => {
-            // Assuming `post.comments` is an array, sort it by `createdAt` descending
-            post.comments.sort((a, b) => b.createdAt - a.createdAt);
+            .sort({ createdAt: -1 }) // Sort by most recent
+            .skip(skip) // Skip posts for pagination
+            .limit(limit) // Limit the number of posts fetched
+            .populate({ path: 'author', select: 'username profilePicture' }) // Populate author details
+            .populate({
+            path: 'comments',
+            populate: { path: 'author', select: 'username profilePicture' } // Populate comment author details
         });
+        // Check if posts are found
+        if (posts.length === 0) {
+            return res.status(404).json({ message: 'No posts found', success: false });
+        }
         return res.status(200).json({ posts, success: true });
     }
     catch (error) {
-        console.error("Error fetching posts:", error.message);
+        console.error("Error fetching posts:", error.message); // Log error details
         return res.status(500).json({ message: 'Server Error', success: false });
     }
 };
