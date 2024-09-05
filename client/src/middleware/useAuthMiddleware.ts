@@ -1,30 +1,43 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+// middleware/useAuthMiddleware.tsx
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const getCookie = (name:string): string|undefined => {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) {
-        return parts.pop()?.split(";").shift();
-    }
-    return undefined;
+// Function to get the token from localStorage or cookies
+const getToken = (): string | null => {
+  return localStorage.getItem('token');
 };
 
+// Middleware-like hook to manage authentication redirects
 export const useAuthMiddleware = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true); // Add a loading state
 
   useEffect(() => {
-    const token = getCookie('token');
-    console.log(token);
+    // Function to check authentication state and navigate accordingly
+    const checkAuth = () => {
+      const token = getToken();
 
-    if ((window.location.pathname === '/login'  || window.location.pathname === '/register') && token) {
-      navigate('/feed');
-      return;
-    } else if (!token && window.location.pathname !== '/feed') {
-      navigate('/');
-      return;
-    }
+      if (token) {
+        if (window.location.pathname === '/login' || window.location.pathname === '/register') {
+          navigate('/feed', { replace: true });
+        }
+      } else {
+        if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {
+          navigate('/login', { replace: true });
+        }
+      }
+
+      setIsLoading(false); // Set loading to false after checking
+    };
+
+    checkAuth();
+
+    window.addEventListener('storage', checkAuth);
+
+    return () => {
+      window.removeEventListener('storage', checkAuth);
+    };
   }, [navigate]);
 
-  return {};
+  return { isLoading };
 };
