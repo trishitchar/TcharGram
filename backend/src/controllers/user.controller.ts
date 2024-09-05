@@ -91,10 +91,12 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
     };
 
     res.cookie('token', token, {
-      httpOnly: false,
-      // sameSite: 'lax',
-      maxAge: 24 * 60 * 60 * 1000,
+      httpOnly: true, // Prevents client-side JavaScript from accessing the cookie
+      secure: true, // Ensures the cookie is sent over HTTPS only
+      sameSite: 'strict', // Cookie is sent only for same-site requests
+      maxAge: 24 * 60 * 60 * 1000, // 1 day expiration time
     });
+    
 
     return res.json({
       message: `Welcome back ${user.username}`,
