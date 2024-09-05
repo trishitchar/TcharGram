@@ -8,6 +8,7 @@ import { FaRegHeart } from "react-icons/fa";
 import { Button } from "../ui/button";
 import { userBaseURL } from '@/data/data';
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 type SidebarItem = {
@@ -16,6 +17,8 @@ type SidebarItem = {
 };
 
 const Sidebar: React.FC = () => {
+  const navigate = useNavigate();
+
   const sidebarItems: SidebarItem[] = [
     { icon: <GoHomeFill />, text: "Home" },
     { icon: <IoSearch />, text: "Search" },
@@ -27,17 +30,26 @@ const Sidebar: React.FC = () => {
     { 
       icon: 
       <Avatar>
-        <AvatarImage src="https://cdn-icons-png.flaticon.com/512/1144/1144760.png" alt="lol"></AvatarImage>
+        <AvatarImage src="https://cdn-icons-png.flaticon.com/512/1144/1144760.png" alt="Profile" />
         <AvatarFallback>TC</AvatarFallback>
-      </Avatar>, text: "Profile" },
+      </Avatar>, 
+      text: "Profile" 
+    },
     { icon: <IoLogOutOutline />, text: "LogOut" },
   ];
 
   const logOutHandler = async () => {
     try {
-      const response = await axios.get(`${userBaseURL}/logout`);
-      console.log(response);
-      // Optionally, redirect user or update state here
+      const response = await axios.get(`${userBaseURL}/logout`, { withCredentials: true });
+
+      if (response.status === 200 || response.data.success) {
+        localStorage.removeItem('token'); 
+        document.cookie = 'token=; Max-Age=0';
+        navigate('/login');
+        console.log('Successfully logged out');
+      } else {
+        console.error('Logout failed:', response.data.message);
+      }
     } catch (error) {
       console.error('Error logging out:', error);
     }
@@ -49,8 +61,7 @@ const Sidebar: React.FC = () => {
         logOutHandler();
         break;
       case 'Profile':
-        // Add navigation to profile page or handler here
-        console.log("Navigating to profile");
+        navigate('/profile');
         break;
       default:
         console.log(`Clicked on ${text}`);
