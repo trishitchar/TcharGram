@@ -93,7 +93,7 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
     res.cookie('token', token, {
       httpOnly: true, // Prevents client-side JavaScript from accessing the cookie
       secure: true, // Ensures the cookie is sent over HTTPS only
-      sameSite: 'strict', // Cookie is sent only for same-site requests
+      sameSite: 'none', // Cookie is sent only for same-site requests
       maxAge: 24 * 60 * 60 * 1000, // 1 day expiration time
     });
     
