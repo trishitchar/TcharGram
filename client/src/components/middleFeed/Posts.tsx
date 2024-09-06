@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Post from './Post';
+import { postBaseURL } from '@/data/data';
 
 interface PostType {
   _id: string;
@@ -29,10 +30,17 @@ const Posts: React.FC = () => {
     try {
       // Assuming the backend accepts page and limit query parameters for pagination
       const response = await axios.get(
-        `http://localhost:8080/api/post/allposttest?page=${page}&limit=10`
+        `${postBaseURL}/allposttest?page=${page}&limit=10`
       );
       if (response.data.success) {
-        setPosts((prevPosts) => [...prevPosts, ...response.data.posts]); // Append new posts to existing ones
+        setPosts((prevPosts) => {
+          const newPosts = response.data.posts;
+          // Filter out any posts that already exist to avoid duplicates
+          const uniqueNewPosts = newPosts.filter(
+            (newPost: PostType) => !prevPosts.some((post) => post._id === newPost._id)
+          );
+          return [...prevPosts, ...uniqueNewPosts];
+        });
         setHasMore(response.data.posts.length > 0); // Check if more posts are available
       }
     } catch (error) {

@@ -5,12 +5,15 @@ import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/common/Header';
 import { userBaseURL } from '@/data/data';
+import { useDispatch } from 'react-redux';
+import { setAuthUser } from '@/redux/authSlice';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -32,7 +35,7 @@ const Login: React.FC = () => {
       if (response.data.success) {
         toast.success(response.data.message);
         const { token, user } = response.data;
-
+        dispatch(setAuthUser(user))
         localStorage.setItem('token', token);
         // console.log(token)
 

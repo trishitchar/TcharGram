@@ -1,4 +1,6 @@
+// Sidebar.tsx
 import React from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { GoHomeFill } from "react-icons/go";
 import { IoSearch, IoCreateOutline, IoLogOutOutline } from "react-icons/io5";
 import { MdOutlineExplore } from "react-icons/md";
@@ -6,20 +8,21 @@ import { BsFillCameraReelsFill } from "react-icons/bs";
 import { TbMessageFilled } from "react-icons/tb";
 import { FaRegHeart } from "react-icons/fa";
 import { Button } from "../ui/button";
-import { userBaseURL } from '@/data/data';
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-
-type SidebarItem = {
-  icon: JSX.Element;
-  text: string;
-};
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { userBaseURL } from '@/data/data';
+import { RootState } from "@/redux/store"; 
+import { logout } from "@/redux/authSlice";
 
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const sidebarItems: SidebarItem[] = [
+  // Select user from Redux store with correct typing
+  const user = useSelector((state: RootState) => state.auth.user);
+
+  const sidebarItems = [
     { icon: <GoHomeFill />, text: "Home" },
     { icon: <IoSearch />, text: "Search" },
     { icon: <MdOutlineExplore />, text: "Explore" },
@@ -30,7 +33,8 @@ const Sidebar: React.FC = () => {
     { 
       icon: 
       <Avatar>
-        <AvatarImage src="https://cdn-icons-png.flaticon.com/512/1144/1144760.png" alt="Profile" />
+        {/* Check if user has a profile picture; if not, show a default image */}
+        <AvatarImage src={user?.profilePicture || "https://cdn-icons-png.flaticon.com/512/1144/1144760.png"} alt="Profile" />
         <AvatarFallback>TC</AvatarFallback>
       </Avatar>, 
       text: "Profile" 
@@ -45,6 +49,7 @@ const Sidebar: React.FC = () => {
       if (response.status === 200 || response.data.success) {
         localStorage.removeItem('token'); 
         document.cookie = 'token=; Max-Age=0';
+        dispatch(logout()); // Dispatch the logout action
         navigate('/login');
         console.log('Successfully logged out');
       } else {

@@ -1,26 +1,35 @@
 // redux/authSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-// Define the state structure
-interface AuthState {
-  user: string | null;
+// Define the User interface with expected properties
+interface User {
+  _id: string;
+  username: string;
+  email: string;
+  profilePicture: string;
+  // Add any other properties you need
 }
 
-// Set initial state
+interface AuthState {
+  user: User | null; // Ensure the user is an object or null, not a string
+}
+
 const initialState: AuthState = {
-  user: null,
+  user: null, // Initial state is null
 };
 
-// Create a slice for authentication
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setAuthUser: (state, action: PayloadAction<string | null>) => {
+    setAuthUser: (state, action: PayloadAction<User | null>) => {
       state.user = action.payload;
+    },
+    logout: (state) => {
+      state.user = null; // Clear the user on logout
     },
   },
 });
 
-export const { setAuthUser } = authSlice.actions;
+export const { setAuthUser, logout } = authSlice.actions;
 export default authSlice.reducer;
