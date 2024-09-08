@@ -31,12 +31,16 @@ const Sidebar: React.FC = () => {
     { icon: <FaRegHeart />, text: "Notifications" },
     { icon: <IoCreateOutline />, text: "Create" },
     { 
-      icon: 
-      <Avatar>
-        {/* Check if user has a profile picture; if not, show a default image */}
-        <AvatarImage src={user?.profilePicture || "https://cdn-icons-png.flaticon.com/512/1144/1144760.png"} alt="Profile" />
-        <AvatarFallback>TC</AvatarFallback>
-      </Avatar>, 
+      icon: (
+        <Avatar className="w-8 h-8">
+          <AvatarImage
+            src={user?.profilePicture || "https://cdn-icons-png.flaticon.com/512/1144/1144760.png"}
+            alt="Profile"
+            className="rounded-full"
+          />
+          <AvatarFallback>TC</AvatarFallback>
+        </Avatar>
+      ), 
       text: "Profile" 
     },
     { icon: <IoLogOutOutline />, text: "LogOut" },
@@ -74,22 +78,24 @@ const Sidebar: React.FC = () => {
   };
 
   return (
-    <div className="w-64 h-screen bg-white border-r flex flex-col relative">
-      <div className="p-4">
-        <h1 className="text-2xl font-bold mb-8">Instagram</h1>
+    <div className="w-64 h-screen bg-white border-r flex flex-col justify-between shadow-md">
+      <div className="p-6">
+        <h1 className="text-3xl font-semibold mb-8 text-gray-800">Instagram</h1>
         {sidebarItems.map(({ icon, text }) => (
           <Button
             onClick={() => handleClick(text)}
             key={text}
-            className="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded cursor-pointer"
+            className="flex items-center space-x-4 py-3 px-4 mb-2 rounded-lg text-gray-300 hover:bg-gray-200 hover:text-black transition-colors duration-200"
           >
             {icon}
-            <span className="text-sm">{text}</span>
+            <span className="text-base font-medium">{text}</span>
           </Button>
         ))}
       </div>
-      <div className="absolute bottom-4 left-4">
-        <button className="text-lg hover:text-blue-500">More</button>
+      <div className="p-6">
+        <button className="text-base text-gray-600 hover:text-blue-500 transition-colors duration-200">
+          More
+        </button>
       </div>
     </div>
   );
