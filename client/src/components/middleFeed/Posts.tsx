@@ -19,51 +19,51 @@ interface PostType {
 }
 
 const Posts: React.FC = () => {
-  const [posts, setPosts] = useState<PostType[]>([]); // State to hold posts
-  const [page, setPage] = useState<number>(1); // State to track the current page
-  const [loading, setLoading] = useState<boolean>(false); // State to manage loading state
-  const [hasMore, setHasMore] = useState<boolean>(true); // State to track if there are more posts to load
+  const [posts, setPosts] = useState<PostType[]>([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
 
-  // Fetch posts with pagination
-  const fetchPosts = async () => {
-    setLoading(true);
-    try {
-      // Assuming the backend accepts page and limit query parameters for pagination
-      const response = await axios.get(
-        `${postBaseURL}/allposttest?page=${page}&limit=10`
-      );
-      if (response.data.success) {
-        setPosts((prevPosts) => {
-          const newPosts = response.data.posts;
-          // Filter out any posts that already exist to avoid duplicates
-          const uniqueNewPosts = newPosts.filter(
-            (newPost: PostType) => !prevPosts.some((post) => post._id === newPost._id)
-          );
-          return [...prevPosts, ...uniqueNewPosts];
-        });
-        setHasMore(response.data.posts.length > 0); // Check if more posts are available
-      }
-    } catch (error) {
-      console.error('Error fetching posts:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Load initial posts when component mounts
   useEffect(() => {
+    const fetchPosts = async () => {
+      setLoading(true);
+      try {
+        // const response = await axios.get(
+      //   `${postBaseURL}/allposttest?page=${page}&limit=10`
+      // );
+        const response = await axios.get(`${postBaseURL}/allposttest`, {
+          params: { page, limit: 10 },
+        });
+        if (response.data.success) {
+          const newPosts = response.data.posts;
+          setPosts((prevPosts) => {
+            const uniquePosts = newPosts.filter(
+              (newPost: PostType) => !prevPosts.some((post) => post._id === newPost._id)
+            );
+            return [...prevPosts, ...uniquePosts];
+          });
+          setHasMore(newPosts.length > 0);
+        } else {
+          console.error('Failed to fetch posts:', response.data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchPosts();
   }, [page]);
 
-  // Load more posts when clicking the button
   const loadMorePosts = () => {
     if (!loading && hasMore) {
-      setPage((prevPage) => prevPage + 1); // Increment the page number
+      setPage((prevPage) => prevPage + 1);
     }
   };
 
   return (
-    <div>
+    <div className="container mx-auto p-4">
       {posts.map((post) => (
         <Post key={post._id} post={post} />
       ))}
@@ -71,7 +71,9 @@ const Posts: React.FC = () => {
         <button
           onClick={loadMorePosts}
           disabled={loading}
-          className="bg-blue-500 text-white p-2 rounded"
+          className={`bg-blue-500 text-white py-2 px-4 rounded mt-4 ${
+            loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'
+          }`}
         >
           {loading ? 'Loading...' : 'Load More'}
         </button>
