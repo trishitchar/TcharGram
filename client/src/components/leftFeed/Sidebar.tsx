@@ -14,10 +14,12 @@ import axios from "axios";
 import { userBaseURL } from '@/data/data';
 import { RootState } from "@/redux/store"; 
 import { logout } from "@/redux/authSlice";
+import CreatePost from "./CreatePost";
 
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [open, setOpen] = React.useState(false);
 
   // Select user from Redux store with correct typing
   const user = useSelector((state: RootState) => state.auth.user);
@@ -72,6 +74,9 @@ const Sidebar: React.FC = () => {
       case 'Profile':
         navigate('/profile');
         break;
+      case 'Create':
+        setOpen(true);
+        break;
       default:
         console.log(`Clicked on ${text}`);
     }
@@ -92,6 +97,7 @@ const Sidebar: React.FC = () => {
           </Button>
         ))}
       </div>
+      <CreatePost open={open} setOpen={setOpen} />
       <div className="p-6">
         <button className="text-base text-gray-600 hover:text-blue-500 transition-colors duration-200">
           More

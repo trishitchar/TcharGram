@@ -29,8 +29,8 @@ const Posts: React.FC = () => {
       setLoading(true);
       try {
         // const response = await axios.get(
-      //   `${postBaseURL}/allposttest?page=${page}&limit=10`
-      // );
+        //   `${postBaseURL}/allposttest?page=${page}&limit=10`
+        // );
         const response = await axios.get(`${postBaseURL}/allposttest`, {
           params: { page, limit: 10 },
         });
