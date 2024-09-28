@@ -48,12 +48,12 @@ const Post: React.FC<PostProps> = ({ post }) => {
         <div className="p-4 flex gap-3">
           <div className="w-8 h-8">
             <img
-              src={post.author.profilePicture}
+              src={post.author?.profilePicture}
               alt="userIcon"
               className="w-full rounded-full"
             />
           </div>
-          <p className="font-semibold">{post.author.username}</p>
+          <p className="font-semibold">{post.author?.username}</p>
         </div>
         <Dialog open={openComponent === 'optionsDialog'} onOpenChange={() => setOpenComponent('none')}>
           <DialogTrigger asChild>
@@ -83,12 +83,12 @@ const Post: React.FC<PostProps> = ({ post }) => {
           <button onClick={() => handleDialogOpen('commentsDialog')}>Comment</button>
           <button>Share</button>
         </div>
-        <p>{post.likes.length} likes</p>
+        <p>{post.likes?.length} likes</p>
         <p>
-          <strong>{post.author.username}</strong> {post.caption}
+          <strong>{post.author?.username}</strong> {post.caption}
         </p>
         <p className="text-gray-500 cursor-pointer" onClick={() => handleDialogOpen('commentsDialog')}>
-          View all {post.comments.length} comments
+          View all {post.comments?.length} comments
         </p>
         <ViewAllComment
           openComponent={openComponent}
