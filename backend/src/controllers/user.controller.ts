@@ -119,7 +119,7 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
 
 export const logout = async(_:Request, res:Response) : Promise<Response> =>{
     try {
-      res.cookie('token',"", {
+      res.cookie('token','', {
         httpOnly: false,
         secure: true,
         sameSite: 'none',

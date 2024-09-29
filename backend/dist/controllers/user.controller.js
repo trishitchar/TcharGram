@@ -102,7 +102,7 @@ export const login = async (req, res) => {
 };
 export const logout = async (_, res) => {
     try {
-        res.cookie('token', "", {
+        res.cookie('token', '', {
             httpOnly: false,
             secure: true,
             sameSite: 'none',
