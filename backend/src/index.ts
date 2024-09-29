@@ -35,6 +35,6 @@ app.use("/api/post",  postRoute)
 app.use("/api/message",  messageRoute)
 
 app.listen(`${process.env.PORT}`,()=>{
-   connectDB();
-    console.log(`server is running on port ${process.env.PORT}`);
+  connectDB();
+  console.log(`server is running on port ${process.env.PORT}`);
 })
