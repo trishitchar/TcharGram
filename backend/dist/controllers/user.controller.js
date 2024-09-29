@@ -86,8 +86,9 @@ export const login = async (req, res) => {
             secure: true, // Ensures the cookie is sent over HTTPS only
             sameSite: 'none', // Cookie is sent only for same-site requests
             maxAge: 24 * 60 * 60 * 1000, // 1 day expiration time
+            path: '/', // Ensure cookie is available on all pages
         });
-        return res.json({
+        return res.status(200).json({
             message: `Welcome back ${user.username}`,
             success: true,
             token,
@@ -105,9 +106,14 @@ export const logout = async (_, res) => {
             httpOnly: false,
             secure: true,
             sameSite: 'none',
-            maxAge: 0
+            maxAge: 0,
+            path: '/',
         });
-        return res.cookie("token", "", { maxAge: 0 }).json({
+        // return res.cookie("token", "", {maxAge:0}).json({
+        //     message: 'logout done',
+        //     success: 'true'
+        // });
+        return res.status(200).json({
             message: 'logout done',
             success: 'true'
         });
