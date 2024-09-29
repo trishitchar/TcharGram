@@ -4,6 +4,8 @@ import jwt from 'jsonwebtoken';
 import getDataUri from '../utils/datauri.js';
 import Cloudinary from '../utils/cloudinary.js';
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+dotenv.config();
 export const register = async (req, res) => {
     try {
         const { username, email, password } = req.body;
@@ -16,7 +18,7 @@ export const register = async (req, res) => {
         }
         const user = await User.findOne({ email });
         if (user) {
-            console.error("User already exists:", user);
+            // console.error("User already exists:", user);
             return res.status(401).json({
                 message: "User already exists",
                 success: false,
@@ -28,7 +30,7 @@ export const register = async (req, res) => {
             email,
             password: hashedPassword,
         });
-        console.log("User created successfully:", { username, email });
+        // console.log("User created successfully:", { username, email });
         return res.status(201).json({
             message: "Account created successfully.",
             success: true,
@@ -43,7 +45,7 @@ export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
         if (!email || !password) {
-            console.error("Missing fields:", { email, password });
+            // console.error("Missing fields:", { email, password });
             return res.status(401).json({
                 message: "Something is missing, please check!",
                 success: false,
@@ -75,7 +77,10 @@ export const login = async (req, res) => {
             bio: user.bio,
             followers: user.followers,
             following: user.following,
+            posts: user?.posts,
+            bookmarks: user?.bookmarks,
         };
+        // console.log("User logged in:", userInfo);
         res.cookie('token', token, {
             httpOnly: true, // Prevents client-side JavaScript from accessing the cookie
             secure: true, // Ensures the cookie is sent over HTTPS only
@@ -98,7 +103,8 @@ export const logout = async (_, res) => {
     try {
         res.cookie('token', "", {
             httpOnly: false,
-            // sameSite: 'lax',
+            secure: true,
+            sameSite: 'none',
             maxAge: 0
         });
         return res.cookie("token", "", { maxAge: 0 }).json({
@@ -114,7 +120,7 @@ export const logout = async (_, res) => {
 export const getProfile = async (req, res) => {
     try {
         const userId = req.params.id;
-        console.log(userId);
+        // console.log( "getProfile", userId);
         const user = await User.findById(userId);
         // .populate({path:'posts', options:{sort:{createdAt: -1}}}).populate('bookmarks');
         if (!user) {
@@ -124,6 +130,7 @@ export const getProfile = async (req, res) => {
             });
         }
         return res.status(200).json({
+            message: "get profile successfully",
             user,
             success: true
         });

@@ -25,16 +25,20 @@ const userSchema: Schema<IUser> = new Schema(
         required: true, 
         unique: true 
     },
-    password: { type: String, 
+    password: { 
+        type: String, 
         required: true 
     },
-    profilePicture: { type: String, 
+    profilePicture: { 
+        type: String, 
         default: '' 
     },
-    bio: { type: String, 
+    bio: { 
+        type: String, 
         default: '' 
     },
-    gender: { type: String, 
+    gender: { 
+        type: String, 
         enum: ['male', 'female'] 
     },
     followers: [{ 

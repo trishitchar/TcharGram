@@ -27,7 +27,7 @@ backend
             cloudinary.ts (upload to cloud)
         
         custom.declaration.ts (sometimes ts gives problem so temp solution)
-        
+
         index.ts (main file)
 ```
 
@@ -35,8 +35,10 @@ backend
 
 - [] chat option
 - [] video call
-- [] maybe some eth stuff web3
+- [] maybe some eth stuff web3 or for payment to get verified tick
 - [] maybe some nvdia ai model integration
 - [] 3d integration using ai and .ts
 - [] multiple file upload if possible then corrousal in fronend
-- usgin some maps cordination samna samni user er suggestion diya by the algo
+- using some maps cordination samna samni user er suggestion diya by the algo
+- maybe add some compiler for coding platform
+- photo te kono product then can sense the product then redict to some marketplace

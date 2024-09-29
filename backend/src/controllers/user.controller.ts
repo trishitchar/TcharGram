@@ -5,6 +5,8 @@ import jwt from 'jsonwebtoken'
 import getDataUri from '../utils/datauri.js';
 import Cloudinary from '../utils/cloudinary.js';
 import mongoose from 'mongoose';
+import dotenv from 'dotenv'
+dotenv.config();
 
 export const register = async (req: Request, res: Response): Promise<Response> => {
     try {
@@ -20,7 +22,7 @@ export const register = async (req: Request, res: Response): Promise<Response> =
 
         const user = await User.findOne({ email });
         if (user) {
-            console.error("User already exists:", user);
+            // console.error("User already exists:", user);
             return res.status(401).json({
                 message: "User already exists",
                 success: false,
@@ -34,7 +36,7 @@ export const register = async (req: Request, res: Response): Promise<Response> =
             password: hashedPassword,
         });
 
-        console.log("User created successfully:", { username, email });
+        // console.log("User created successfully:", { username, email });
 
         return res.status(201).json({
             message: "Account created successfully.",
@@ -51,7 +53,7 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      console.error("Missing fields:", { email, password });
+      // console.error("Missing fields:", { email, password });
       return res.status(401).json({
         message: "Something is missing, please check!",
         success: false,
@@ -88,7 +90,10 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
       bio: user.bio,
       followers: user.followers,
       following: user.following,
+      posts: user?.posts,
+      bookmarks: user?.bookmarks,
     };
+    // console.log("User logged in:", userInfo);
 
     res.cookie('token', token, {
       httpOnly: true, // Prevents client-side JavaScript from accessing the cookie
@@ -115,7 +120,8 @@ export const logout = async(_:Request, res:Response) : Promise<Response> =>{
     try {
       res.cookie('token',"", {
         httpOnly: false,
-        // sameSite: 'lax',
+        secure: true,
+        sameSite: 'none',
         maxAge: 0
       });
         return res.cookie("token", "", {maxAge:0}).json({
@@ -131,7 +137,7 @@ export const logout = async(_:Request, res:Response) : Promise<Response> =>{
 export const getProfile = async (req: Request, res: Response): Promise<Response> => {
     try {
         const userId = req.params.id;
-        console.log(userId)
+        // console.log( "getProfile", userId);
         const user = await User.findById(userId);
         // .populate({path:'posts', options:{sort:{createdAt: -1}}}).populate('bookmarks');
         if(!user){
@@ -141,8 +147,9 @@ export const getProfile = async (req: Request, res: Response): Promise<Response>
             })
         }
         return res.status(200).json({
-            user,
-            success: true
+          message: "get profile successfully",
+          user,
+          success: true
         })
     } catch (error) {
         console.error(error);

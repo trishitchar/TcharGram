@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+dotenv.config();
 
 interface JwtPayload {
   userId: string;
@@ -16,7 +18,7 @@ const isTokenValid = async (
 ): Promise<void> => {
   try {
     const token = req.cookies.token;
-    // console.log(token)
+    // console.log("istokenvaild token:",token)
 
     if (!token) {
       res.status(401).json({
