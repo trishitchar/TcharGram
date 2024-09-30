@@ -42,3 +42,4 @@ backend
 - using some maps cordination samna samni user er suggestion diya by the algo
 - maybe add some compiler for coding platform
 - photo te kono product then can sense the product then redict to some marketplace
+- video reels if possible

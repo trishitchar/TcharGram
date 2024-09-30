@@ -1,34 +1,37 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
-const getToken = (): string | null => localStorage.getItem('token');
+const TOKEN_KEY = 'token';
 
-export const auth = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+export const useAuth = () => {
+  const [token, setToken] = useState<string | null>(localStorage.getItem(TOKEN_KEY));
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const isAuthenticated = !!token;
 
   useEffect(() => {
-    const token = getToken();
-    if (token) {
-      setIsAuthenticated(true);
-    } else {
-      setIsAuthenticated(false);
+    const publicRoutes = ['/', '/login', '/register'];
+    const currentPath = location.pathname;
+
+    if (isAuthenticated && (currentPath === '/login' || currentPath === '/register')) {
+      navigate('/feed');
+    } else if (!isAuthenticated && !publicRoutes.includes(currentPath)) {
+      navigate('/login');
     }
+  }, [isAuthenticated, location.pathname, navigate]);
 
-    // Redirect based on the current path and authentication state
-    const handleRedirect = () => {
-      const pathname = window.location.pathname;
-      if (pathname === '/login' || pathname === '/register') {
-        if (isAuthenticated) {
-          navigate('/feed');
-        }
-      } else if (!isAuthenticated) {
-        navigate('/login');
-      }
-    };
+  const login = (newToken: string) => {
+    localStorage.setItem(TOKEN_KEY, newToken);
+    setToken(newToken);
+    navigate('/feed');
+  };
 
-    handleRedirect();
-  }, [navigate, isAuthenticated]);
+  const logout = () => {
+    localStorage.removeItem(TOKEN_KEY);
+    setToken(null);
+    navigate('/');
+  };
 
-  return { isAuthenticated };
+  return { isAuthenticated, login, logout };
 };

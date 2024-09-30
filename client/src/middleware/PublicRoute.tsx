@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, Route, useLocation } from 'react-router-dom';
-import { auth } from './auth';
+import { useAuth } from '@/middleware/auth';
 
 interface PublicRouteProps {
   element: JSX.Element;
@@ -8,7 +8,7 @@ interface PublicRouteProps {
 }
 
 const PublicRoute: React.FC<PublicRouteProps> = ({ element, path }) => {
-  const { isAuthenticated } = auth();
+  const { isAuthenticated } = useAuth();
   const location = useLocation();
 
   if (isAuthenticated) {

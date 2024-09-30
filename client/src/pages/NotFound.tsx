@@ -6,7 +6,7 @@ const NotFound: React.FC = () => {
   const navigate = useNavigate();
 
   const handleGoToHomepage = () => {
-    navigate('/login'); // Navigate to the login page
+    navigate('/login');
   };
 
   return (
