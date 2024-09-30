@@ -1,9 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { Dialog, DialogContent } from '../ui/dialog'; 
-import axios from 'axios';
-import { useSelector } from 'react-redux'; // Import useSelector to access Redux state
-import { RootState } from '@/redux/store'; // Import RootState from your store to type-check Redux state
-import { postBaseURL } from '@/data/data';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { createPost } from '@/api/post.api.ts';
 
 interface CreatePostProps {
   open: boolean;
@@ -11,47 +10,33 @@ interface CreatePostProps {
 }
 
 const CreatePost: React.FC<CreatePostProps> = ({ open, setOpen }) => {
-  const [caption, setCaption] = useState<string>(''); 
+  const [caption, setCaption] = useState<string>('');
   const [imageUploaded, setImageUploaded] = useState<boolean>(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const imageRef = useRef<HTMLInputElement>(null);
-  const [file, setFile] = useState<File | null>(null); // Keep track of the file
+  const [file, setFile] = useState<File | null>(null);
 
-  // Get the current user from the Redux store
   const currentUser = useSelector((state: RootState) => state.auth.user);
 
-  // Handle creating a post
   const createPostHandler = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+
     try {
       if (!file || !caption || !currentUser) {
-        console.error('Image, caption, or user is missing.');
+        setError('Image, caption, or user is missing.');
         return;
       }
 
-      // Get the JWT token from localStorage or your auth provider
-      const token = localStorage.getItem('token'); // or however you're storing the token
-
-      if (!token) {
-        console.error('No authentication token found.');
-        return;
-      }
-
-      // Prepare the FormData object for file upload
       const formData = new FormData();
-      formData.append('caption', caption); // Add caption
-      formData.append('image', file); // Add image file
-      formData.append('userId', currentUser._id); // Include user ID from Redux
+      formData.append('caption', caption);
+      formData.append('image', file);
+      formData.append('userId', currentUser._id);
 
-      // Send the POST request to the backend
-      const response = await axios.post(`${postBaseURL}/addpost`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}`, // Add the Authorization header
-        },
-      });
+      const response = await createPost(formData);
 
-      console.log('Post created successfully:', response.data);
+      console.log('Post created successfully:', response);
 
       // Clear the form after post creation
       setCaption('');
@@ -62,16 +47,15 @@ const CreatePost: React.FC<CreatePostProps> = ({ open, setOpen }) => {
 
     } catch (error) {
       console.error('Error creating post:', error);
+      setError('Failed to create post. Please try again.');
     }
   };
 
-  // Handle image upload and convert it to Data URL
   const handleImageUpload = async () => {
     if (imageRef.current && imageRef.current.files?.length) {
       const file = imageRef.current.files[0];
-      setFile(file); // Save the file for the request
+      setFile(file);
 
-      // Generate an image preview
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
@@ -82,7 +66,6 @@ const CreatePost: React.FC<CreatePostProps> = ({ open, setOpen }) => {
     }
   };
 
-  // Handle caption change
   const handleCaptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCaption(e.target.value);
   };
@@ -122,10 +105,16 @@ const CreatePost: React.FC<CreatePostProps> = ({ open, setOpen }) => {
             {imagePreview && (
               <div className='mt-4'>
                 <img
-                  src={imagePreview as string}
+                  src={imagePreview}
                   alt="Uploaded"
                   className="object-cover w-full h-64 rounded-md"
                 />
+              </div>
+            )}
+
+            {error && (
+              <div className="mt-4 text-red-500">
+                {error}
               </div>
             )}
 

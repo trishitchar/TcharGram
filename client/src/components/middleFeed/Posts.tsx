@@ -1,53 +1,47 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import Post from './Post';
-import { postBaseURL } from '@/data/data';
+// src/components/Posts.tsx
 
-interface PostType {
-  _id: string;
-  caption: string;
-  image: string;
-  author: {
-    _id: string;
-    username: string;
-    profilePicture: string;
-  };
-  likes: string[];
-  comments: string[];
-  createdAt: string;
-  updatedAt: string;
-}
+import React, { useEffect, useState } from 'react';
+import Post from './Post';
+import { getAllPosts, PostType } from '@/api/post.api.ts';
 
 const Posts: React.FC = () => {
   const [posts, setPosts] = useState<PostType[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
       setLoading(true);
+      setError(null);
       try {
-        // const response = await axios.get(
-        //   `${postBaseURL}/allposttest?page=${page}&limit=10`
-        // );
-        const response = await axios.get(`${postBaseURL}/allposttest`, {
-          params: { page, limit: 10 },
-        });
-        if (response.data.success) {
-          const newPosts = response.data.posts;
+        const response = await getAllPosts(page, 10);
+        if (response.success && response.posts) {
           setPosts((prevPosts) => {
-            const uniquePosts = newPosts.filter(
-              (newPost: PostType) => !prevPosts.some((post) => post._id === newPost._id)
+            const uniquePosts = response.posts.filter(
+              (newPost) => !prevPosts.some((post) => post._id === newPost._id)
             );
             return [...prevPosts, ...uniquePosts];
           });
-          setHasMore(newPosts.length > 0);
+          setHasMore(response.posts.length > 0);
         } else {
-          console.error('Failed to fetch posts:', response.data.message);
+          setError('Failed to fetch posts: ' + (response.message || 'Unknown error'));
+          setHasMore(false);
         }
       } catch (error) {
+        if (error instanceof Error) {
+          if (error.message === 'Unauthorized') {
+            setError('Your session has expired. Please log in again.');
+            // Here you might want to redirect to login page or refresh the token
+          } else {
+            setError('An error occurred while fetching posts. Please try again.');
+          }
+        } else {
+          setError('An unexpected error occurred.');
+        }
         console.error('Error fetching posts:', error);
+        setHasMore(false);
       } finally {
         setLoading(false);
       }
@@ -64,6 +58,12 @@ const Posts: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4">
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+          <strong className="font-bold">Error: </strong>
+          <span className="block sm:inline">{error}</span>
+        </div>
+      )}
       {posts.map((post) => (
         <Post key={post._id} post={post} />
       ))}
