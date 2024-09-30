@@ -1,5 +1,4 @@
 // import Header from '@/components/common/Header';
-import Header from '@/components/common/Header';
 import MainFeed from '@/components/middleFeed/MainFeed';
 import Sidebar from '@/components/leftFeed/Sidebar';
 import SuggestionPage from '@/components/rightFeed/SuggestionPage';
@@ -10,7 +9,7 @@ const Feed: React.FC = () => {
 
   return (
     <div>
-      <Header/>
+      {/* <Header/> */}
       <div className="flex h-screen bg-gray-50">
         <Sidebar />
         <div className="flex flex-1">
