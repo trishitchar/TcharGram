@@ -43,3 +43,11 @@ backend
 - maybe add some compiler for coding platform
 - photo te kono product then can sense the product then redict to some marketplace
 - video reels if possible
+- Content Recommendations:
+- Multi-language Support
+Augmented Reality Filters:
+Live Streaming:
+Collaborative Content Creation: like me with someone post like insta
+Digital Asset Marketplace  ETH/Web3 nft
+Mood-based Content Filtering:
+Voice Commands:

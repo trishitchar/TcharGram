@@ -1,18 +1,15 @@
-```
-client
-    src
-      main.tsx (main starting file)
-      app.tsx
-      pages (no of different pages like login register feed etc)
-      components
-        common (for common component like header or footer)     
-        leftFeed (for the left section of the project like home search profile logout button)
-        middleFeed (for mainly stories and posts)
-        rightFeed (for suggested user etc)
-        ui (shadcn component)  
-      data (hadcoded data)
-      middleware (for auth check or decode token check)
-      redux (for stores and slices)         
-      lib (shadcn component)
-    public (static file like image etc)
-```
+- sitename.com/profile/(mongoid) later will add = sitename.com/username (anyone can view)
+- private public profile 
+- if possible stories
+- cashing technique maybe like redis or something
+- micro service for more user handle Microservices Architecture:
+- Load Balancing round robbin
+- Caching Strategy: cdn or radis
+- Database Optimization:
+- Asynchronous Processing:
+- Content Delivery Network (CDN):
+- Auto-scaling:
+- Real-time Communication:
+- Rate Limiting and Throttling:
+- Data Compression if user have low internet then low quality content like yt change the quality
+- Optimized Search
