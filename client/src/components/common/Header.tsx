@@ -63,7 +63,7 @@ const Header: React.FC = () => {
                 <img src="./logo.svg" alt="Logo" className="h-10 w-45" />
               </div>
             </button>
-            <div className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">TcharGram</div>
+            {/* <div className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">TcharGram</div> */}
           </div>
           <nav className="hidden md:flex space-x-4">
             {!userId ? (

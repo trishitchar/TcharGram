@@ -2,19 +2,21 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { decodeToken } from '../../middleware/DecodedToken';
 import { userBaseURL } from '@/data/data';
+import { useNavigate } from 'react-router-dom';
 
 interface User {
   _id: string;
   username: string;
   profilePicture?: string;
   isFollowing?: boolean;
-  following: string[];  // Add this line
+  following: string[]; 
 }
 
 const SuggestionPage: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [followingList, setFollowingList] = useState<string[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchCurrentUser();
@@ -97,6 +99,10 @@ const SuggestionPage: React.FC = () => {
     }
   };
 
+  const redirectToAllUsers = () => {
+    navigate('/explore/people', { state: { users } }); 
+  };
+
   return (
     <div className="w-80 p-4">
       {currentUser && (
@@ -118,7 +124,7 @@ const SuggestionPage: React.FC = () => {
       <div>
         <p className="font-semibold text-gray-500 mb-2">Suggested for you</p>
         <ul className="space-y-3">
-          {users.map((user) => (
+          {users.slice(0, 5).map((user) => (
             <li key={user._id} className="flex items-center justify-between">
               <div className="flex items-center">
                 {user.profilePicture ? (
@@ -134,6 +140,7 @@ const SuggestionPage: React.FC = () => {
             </li>
           ))}
         </ul>
+        <button onClick={redirectToAllUsers} className="mt-4 text-blue-500">Show All Suggested</button>
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import Register from './pages/Register';
 import Profile from './pages/Profile';
 import NotFound from './pages/NotFound';
 import Feed from './pages/Feed';
+import ExplorePeoplePage from './components/rightFeed/ExplorePeoplePage';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -51,6 +52,14 @@ const App: React.FC = () => {
         element={
           <ProtectedRoute>
             <Profile />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="//explore/people" 
+        element={
+          <ProtectedRoute>
+            <ExplorePeoplePage />
           </ProtectedRoute>
         } 
       />

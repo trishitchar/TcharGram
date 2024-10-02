@@ -21,7 +21,6 @@ const Sidebar: React.FC = () => {
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
 
-  // Select user from Redux store with correct typing
   const user = useSelector((state: RootState) => state.auth.user);
 
   const sidebarItems = [
@@ -68,6 +67,9 @@ const Sidebar: React.FC = () => {
 
   const handleClick = (text: string) => {
     switch (text) {
+      case 'Home':
+        navigate('/feed');
+        break;
       case 'LogOut':
         logOutHandler();
         break;
