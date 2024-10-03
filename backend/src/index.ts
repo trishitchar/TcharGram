@@ -7,6 +7,7 @@ import connectDB from './utils/db.js';
 import userRoute from './routes/user.route.js'
 import postRoute from './routes/post.route.js'
 import messageRoute from './routes/message.route.js'
+import keepAlive from './utils/keepAlive.js';
 
 const app = express();
 dotenv.config();
@@ -37,4 +38,5 @@ app.use("/api/message",  messageRoute)
 app.listen(`${process.env.PORT}`,()=>{
   connectDB();
   console.log(`server is running on port ${process.env.PORT}`);
+  keepAlive();
 })
