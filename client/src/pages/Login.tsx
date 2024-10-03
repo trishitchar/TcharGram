@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '@/components/common/Header';
 import { userBaseURL } from '@/data/data';
 import { useDispatch } from 'react-redux';
-import { setAuthUser } from '@/redux/authSlice';
+import { setAuthUser } from '@/redux/slices/authSlice';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('tc@gg');

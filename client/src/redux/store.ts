@@ -1,6 +1,7 @@
 // redux/store.ts
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import authReducer from './authSlice';
+import authReducer from './slices/authSlice';
+import postsReducer from './slices/allPostSlice'
 import {
   persistStore,
   persistReducer,
@@ -25,6 +26,7 @@ const persistConfig: PersistConfig<RootState> = {
 // Combine reducers
 const rootReducer = combineReducers({
   auth: authReducer,
+  posts: postsReducer,
 });
 
 // Persisted reducer
@@ -41,7 +43,7 @@ const store = configureStore({
     }),
 });
 
-export type RootState = ReturnType<typeof rootReducer>; // More precise typing for RootState
+export type RootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = typeof store.dispatch;
 export const persistor = persistStore(store);
 

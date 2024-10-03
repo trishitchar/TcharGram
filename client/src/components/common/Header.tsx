@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { userBaseURL } from "@/data/data";
 import { useDispatch } from "react-redux";
-import { logout } from "@/redux/authSlice";
+import { logout } from "@/redux/slices/authSlice";
 import { decodeToken } from "@/middleware/DecodedToken";
 import { Menu, X } from 'lucide-react';
 

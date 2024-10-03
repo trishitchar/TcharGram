@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { userBaseURL } from '@/data/data';
 import { RootState } from "@/redux/store"; 
-import { logout } from "@/redux/authSlice";
+import { logout } from "@/redux/slices/authSlice";
 import CreatePost from "./CreatePost";
 
 const Sidebar: React.FC = () => {
