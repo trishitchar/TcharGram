@@ -2,6 +2,18 @@
 
 import { postBaseURL } from '@/data/data';
 
+export interface CommentType {
+  _id: string;
+  text: string;
+  author: {
+    _id: string;
+    username: string;
+    profilePicture?: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface PostType {
   _id: string;
   caption: string;
@@ -12,7 +24,7 @@ export interface PostType {
     profilePicture: string;
   };
   likes: string[];
-  comments: string[];
+  comments: CommentType[];
   createdAt: string;
   updatedAt: string;
 }

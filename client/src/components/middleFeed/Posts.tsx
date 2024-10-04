@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Post from './Post';
-import { getAllPosts, PostType } from '@/api/post.api';
+import { getAllPosts } from '@/api/post.api';
 import { useDispatch, useSelector } from 'react-redux';
 import { addPosts } from '@/redux/slices/allPostSlice';
 import { RootState } from '@/redux/store';

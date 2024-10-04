@@ -3,18 +3,10 @@ import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog';
 import { HiDotsHorizontal } from "react-icons/hi";
 import { Button } from '../ui/button';
 import ViewAllComment from './ViewAllComment';
+import { CommentType, PostType } from '@/api/post.api';
 
 interface PostProps {
-  post: {
-    caption: string;
-    image: string;
-    author: {
-      username: string;
-      profilePicture: string;
-    };
-    likes: string[];
-    comments: string[];
-  };
+  post: PostType;
 }
 
 type OpenComponent = 'none' | 'optionsDialog' | 'commentsDialog';
@@ -43,22 +35,23 @@ const Post: React.FC<PostProps> = ({ post }) => {
     }
   };
 
+  // Default values for missing data
+  const defaultProfilePicture = "https://via.placeholder.com/100";
+  const defaultUsername = "Unknown User";
+
   return (
     <div className="bg-white border rounded-lg mb-4">
       <div className="flex justify-between items-center p-4">
         <div className="flex items-center gap-3">
-          {/* author profilepicture */}
           <div className="w-10 h-10 overflow-hidden rounded-full">
             <img
-              src={post.author?.profilePicture}
+              src={post.author?.profilePicture || defaultProfilePicture}
               alt="userIcon"
               className="w-full h-full object-cover"
             />
           </div>
-          {/* author username */}
-          <p className="font-semibold">{post.author?.username}</p>
+          <p className="font-semibold">{post.author?.username || defaultUsername}</p>
         </div>
-        {/* 3 dot unfollow fav delete */}
         <Dialog open={openComponent === 'optionsDialog'} onOpenChange={() => setOpenComponent(prev => prev === 'optionsDialog' ? 'none' : 'optionsDialog')}>
           <DialogTrigger asChild>
             <span className="cursor-pointer">
@@ -78,32 +71,34 @@ const Post: React.FC<PostProps> = ({ post }) => {
           </DialogContent>
         </Dialog>
       </div>
-      {/* post photo */}
       <div className="w-full">
-        <img src={post.image} alt="Post" className="w-full" />
+        <img src={post.image || defaultProfilePicture} alt="Post" className="w-full" />
       </div>
-      {/* post below div like share comment */}
       <div className="p-4">
         <div className="flex space-x-4 mb-2">
           <button>Like</button>
           <button onClick={() => handleDialogOpen('commentsDialog')}>Comment</button>
           <button>Share</button>
         </div>
-        {/* like count */}
-        <p>{post.likes?.length} likes</p>
+        <p>{post.likes?.length || 0} likes</p>
         <p>
-          <strong>{post.author?.username}</strong> {post.caption}
+          <strong>{post.author?.username || defaultUsername}</strong> {post.caption || "No caption"}
         </p>
         <p className="text-gray-500 cursor-pointer" onClick={() => handleDialogOpen('commentsDialog')}>
-          View all {post.comments?.length} comments
+          View all {post.comments?.length || 0} comments
         </p>
         <ViewAllComment
+          post={{
+            ...post,
+            comments: post.comments || [] as CommentType[]  
+          }}
           openComponent={openComponent}
           handleDialogOpen={handleDialogOpen}
           comment={comment}
           handleCommentChange={handleCommentChange}
           handlePostComment={handlePostComment}
         />
+
 
         <div className="flex items-center mt-2">
           <input

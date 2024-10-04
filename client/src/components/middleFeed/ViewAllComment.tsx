@@ -1,7 +1,22 @@
 import React from 'react';
 import { Dialog, DialogContent } from '../ui/dialog';
+import { PostType } from '@/api/post.api';
+
+
+interface CommentType {
+  _id: string;
+  text: string;
+  author: {
+    _id: string;
+    username: string;
+    profilePicture?: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+}
 
 interface ViewAllCommentProps {
+  post: PostType & { comments: CommentType[] }; // Extend PostType to include comments
   openComponent: 'none' | 'optionsDialog' | 'commentsDialog';
   handleDialogOpen: (component: 'none' | 'optionsDialog' | 'commentsDialog') => void;
   comment: string;
@@ -10,58 +25,61 @@ interface ViewAllCommentProps {
 }
 
 const ViewAllComment: React.FC<ViewAllCommentProps> = ({
+  post,
   openComponent,
   handleDialogOpen,
   comment,
   handleCommentChange,
   handlePostComment,
 }) => {
+  // Default values for missing data
+  const defaultProfilePicture = "https://via.placeholder.com/100";
+  const defaultUsername = "Unknown User";
+
   return (
     <Dialog open={openComponent === 'commentsDialog'} onOpenChange={() => handleDialogOpen('none')}>
       <DialogContent className="max-w-[80vw] max-h-[80vh] w-full h-full p-0 flex flex-row overflow-hidden">
         {/* Image Section */}
         <div className="w-2/5 bg-black flex items-center justify-center">
           <img
-            src="https://via.placeholder.com/600x600"
+            src={post.image || defaultProfilePicture}
             alt="post"
             className="object-cover h-full w-full"
           />
         </div>
-
         {/* Details Section */}
         <div className="w-3/5 bg-white flex flex-col">
           {/* Post Header */}
           <div className="flex items-center justify-between p-4 border-b">
             <div className="flex items-center gap-3">
               <img
-                src="https://via.placeholder.com/50"
+                src={post.author?.profilePicture || defaultProfilePicture}
                 alt="profile"
-                className="w-10 h-10 rounded-full"
+                className="w-10 h-10 rounded-full object-cover"
               />
-              <span className="font-semibold">username</span>
+              <span className="font-semibold">{post.author?.username || defaultUsername}</span>
             </div>
             <button className="text-blue-500 font-semibold">Follow</button>
           </div>
-
           {/* Comments Section */}
           <div className="flex-grow overflow-y-auto p-4">
-            {/* Dummy Comments */}
-            {Array.from({ length: 10 }).map((_, index) => (
-              <div key={index} className="flex items-start mb-4">
+            {(post.comments || []).map((comment: CommentType) => (
+              <div key={comment._id} className="flex items-start mb-4">
                 <img
-                  src="https://via.placeholder.com/40"
+                  src={comment.author?.profilePicture || defaultProfilePicture}
                   alt="profile"
-                  className="w-8 h-8 rounded-full mr-3"
+                  className="w-8 h-8 rounded-full mr-3 object-cover"
                 />
                 <div>
-                  <span className="font-semibold mr-2">user{index + 1}</span>
-                  <span>This is a dummy comment to show the layout like Instagram.</span>
-                  <p className="text-gray-500 text-xs mt-1">2h ago</p>
+                  <span className="font-semibold mr-2">{comment.author?.username || defaultUsername}</span>
+                  <span>{comment.text}</span>
+                  <p className="text-gray-500 text-xs mt-1">
+                    {new Date(comment.createdAt).toLocaleString()}
+                  </p>
                 </div>
               </div>
             ))}
           </div>
-
           {/* Comment Input Section */}
           <div className="border-t p-4 flex items-center gap-3">
             <input
