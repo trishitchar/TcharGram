@@ -80,7 +80,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
               Add to fav
             </Button>
             {
-              (currentUser?._id === post.author._id) &&
+              (currentUser?._id === post?.author?._id) &&
               <Button variant="ghost" className="w-full" onClick={deletePostHandler}>
                 Delete
               </Button>
