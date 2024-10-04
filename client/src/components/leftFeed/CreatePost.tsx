@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Dialog, DialogContent } from '../ui/dialog'; 
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { createPost } from '@/api/post.api.ts';
+import { addpost } from '@/api/post.api.ts';
 import { addPosts } from '@/redux/slices/allPostSlice';
 
 interface CreatePostProps {
@@ -37,7 +37,7 @@ const CreatePost: React.FC<CreatePostProps> = ({ open, setOpen }) => {
       formData.append('image', file);
       formData.append('userId', currentUser._id);
   
-      const response = await createPost(formData);
+      const response = await addpost(formData);
   
       if (response.success && response.post) {
         // Dispatch the newly created post to Redux store

@@ -35,6 +35,7 @@ export interface ApiResponse {
   posts: PostType[];
 }
 
+// eita sometimes work kore but nicher ta prai same and updated
 // async function authFetch(endpoint: string, options: RequestInit = {}): Promise<Response> {
 //   const fetchOptions: RequestInit = {
 //     ...options,
@@ -45,6 +46,7 @@ export interface ApiResponse {
 //     },
 //   };
 
+// this is fetching rule and regulation, send headers and json from frontend
 async function authFetch(endpoint: string, options: RequestInit = {}): Promise<Response> {
   const fetchOptions: RequestInit = {
     ...options,
@@ -72,24 +74,7 @@ async function authFetch(endpoint: string, options: RequestInit = {}): Promise<R
   return response;
 }
 
-export async function getAllPosts(page: number = 1, limit: number = 10): Promise<ApiResponse> {
-  try {
-    const response = await authFetch(`/allpost?page=${page}&limit=${limit}`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch posts');
-    }
-    const data: ApiResponse = await response.json();
-    if (!data.success || !Array.isArray(data.posts)) {
-      throw new Error(data.message || 'Invalid response format');
-    }
-    return data;
-  } catch (error) {
-    console.error('Error fetching posts:', error);
-    throw error;
-  }
-}
-
-export async function createPost(formData: FormData): Promise<any> {
+export async function addpost(formData: FormData): Promise<any> {
   try {
     const response = await authFetch('/addpost', {
       method: 'POST',
@@ -105,6 +90,27 @@ export async function createPost(formData: FormData): Promise<any> {
     return await response.json();
   } catch (error) {
     console.error('Error creating post:', error);
+    throw error;
+  }
+}
+
+export async function deletePost() {
+  console.log("delete post api from frontend")
+}
+
+export async function getAllPosts(page: number = 1, limit: number = 10): Promise<ApiResponse> {
+  try {
+    const response = await authFetch(`/allpost?page=${page}&limit=${limit}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch posts');
+    }
+    const data: ApiResponse = await response.json();
+    if (!data.success || !Array.isArray(data.posts)) {
+      throw new Error(data.message || 'Invalid response format');
+    }
+    return data;
+  } catch (error) {
+    console.error('Error fetching posts:', error);
     throw error;
   }
 }
