@@ -3,11 +3,11 @@ import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog';
 import { HiDotsHorizontal } from "react-icons/hi";
 import { Button } from '../ui/button';
 import ViewAllComment from './ViewAllComment';
-import { CommentType, deletePost, likePost, dislikePost, PostType } from '@/api/post.api';
+import { CommentType, deletePost, likePost, dislikePost, PostType, addCommentt } from '@/api/post.api';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import toast from 'react-hot-toast';
-import { removePost, setPosts } from '@/redux/slices/allPostSlice';
+import { addComment, removePost, setPosts } from '@/redux/slices/allPostSlice';
 import { FaHeart, FaRegHeart, FaRegComment, FaRegShareSquare } from "react-icons/fa";
 
 interface PostProps {
@@ -91,12 +91,27 @@ const Post: React.FC<PostProps> = ({ post }) => {
     }
   };
 
-  const handlePostComment = () => {
+  const handlePostComment = async () => {
     if (comment.trim()) {
-      console.log('Posting comment:', comment);
-      setComment('');
+      try {
+        const response = await addCommentt(post._id, comment.trim());
+        
+        if (response.success) {
+          // Dispatch the Redux action with the correct payload
+          dispatch(addComment({
+            postId: post._id,
+            comment: response.comment
+          }));
+          
+          toast.success(response.message);
+          setComment(''); // Clear the comment input
+        }
+      } catch (error) {
+        toast.error('Failed to add comment');
+      }
     }
   };
+  
 
   const handleDoubleTap = () => {
     if (!isLiked) {

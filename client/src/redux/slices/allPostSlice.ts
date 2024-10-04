@@ -1,11 +1,17 @@
 // src/redux/slices/postSlice.ts
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { PostType } from "@/api/post.api.ts";
+import { CommentType, PostType } from "@/api/post.api.ts";
 
 interface AllPostsState {
   posts: PostType[];
 }
+
+interface AddCommentPayload {
+  postId: string;
+  comment: CommentType;
+}
+
 
 const initialState: AllPostsState = {
   posts: [],
@@ -31,8 +37,18 @@ const postSlice = createSlice({
     removeAllPosts: (state) => {
       state.posts = [];
     },
+    addComment: (state, action: PayloadAction<AddCommentPayload>) => {
+      const { postId, comment } = action.payload;
+      const post = state.posts.find(post => post._id === postId);
+      if (post) {
+        if (!post.comments) {
+          post.comments = []; // Ensure comments array exists
+        }
+        post.comments.push(comment); // Add the new comment
+      }
+    },
   },
 });
 
-export const { setPosts, addPosts, removePost, removeAllPosts } = postSlice.actions;
+export const { setPosts, addPosts, removePost, removeAllPosts, addComment } = postSlice.actions;
 export default postSlice.reducer;

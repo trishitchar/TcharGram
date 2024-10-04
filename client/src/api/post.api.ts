@@ -1,5 +1,3 @@
-// src/utils/api.ts
-
 import { postBaseURL } from '@/data/data';
 
 export interface CommentType {
@@ -33,6 +31,13 @@ export interface ApiResponse {
   success: boolean;
   message?: string;
   posts: PostType[];
+}
+
+// comment er response from backend
+export interface AddCommentResponse {
+  message: string;
+  comment: CommentType;
+  success: boolean;
 }
 
 // eita sometimes work kore but nicher ta prai same and updated
@@ -156,6 +161,24 @@ export async function dislikePost(postId: string): Promise<any> {
     return responseData;
   } catch (error) {
     console.error('Error disliking post:', error);
+    throw error;
+  }
+}
+
+export async function addCommentt(postId: string, text: string): Promise<AddCommentResponse> {
+  try {
+    const response = await authFetch(`/addComment/${postId}`, {
+      method: 'POST',
+      body: JSON.stringify({ text }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to add comment');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error adding comment:', error);
     throw error;
   }
 }
