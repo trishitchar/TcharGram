@@ -115,7 +115,9 @@ const Register: React.FC = () => {
                 </Button>
               </div>
             </form>
+            <p className='mt-2 cursor-pointer hover:text-blue-800' onClick={() => navigate('/login')}>Already have an account? Log in</p>
           </div>
+          
         </div>
       </div>
     </div>

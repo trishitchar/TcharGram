@@ -3,7 +3,10 @@ import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog';
 import { HiDotsHorizontal } from "react-icons/hi";
 import { Button } from '../ui/button';
 import ViewAllComment from './ViewAllComment';
-import { CommentType, PostType } from '@/api/post.api';
+import { CommentType, deletePost, PostType } from '@/api/post.api';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import toast from 'react-hot-toast';
 
 interface PostProps {
   post: PostType;
@@ -14,14 +17,25 @@ type OpenComponent = 'none' | 'optionsDialog' | 'commentsDialog';
 const Post: React.FC<PostProps> = ({ post }) => {
   const [comment, setComment] = useState<string>('');
   const [openComponent, setOpenComponent] = useState<OpenComponent>('none');
+  const currentUser = useSelector((state: RootState) => state.auth.user)
 
   const handleDialogOpen = (component: OpenComponent) => {
     setOpenComponent(component);
   };
 
-  const deletePostHandler = () => {
-    alert("Post deleted");
-    setOpenComponent('none');
+  const deletePostHandler = async () => {
+    try {
+      const response = await deletePost(post._id);
+  
+      if (response && response.message) {
+        toast.success(response.message);
+      } else {
+        toast.success('Post deleted successfully');
+      }
+      setOpenComponent('none');
+    } catch (error) {
+      toast.error('Failed to delete post');
+    }
   };
 
   const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,9 +79,12 @@ const Post: React.FC<PostProps> = ({ post }) => {
             <Button variant="ghost" className="w-full">
               Add to fav
             </Button>
-            <Button variant="ghost" className="w-full" onClick={deletePostHandler}>
-              Delete
-            </Button>
+            {
+              (currentUser?._id === post.author._id) &&
+              <Button variant="ghost" className="w-full" onClick={deletePostHandler}>
+                Delete
+              </Button>
+            }
           </DialogContent>
         </Dialog>
       </div>

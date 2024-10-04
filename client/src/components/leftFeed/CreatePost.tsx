@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { addpost } from '@/api/post.api.ts';
 import { addPosts } from '@/redux/slices/allPostSlice';
+import toast from 'react-hot-toast';
 
 interface CreatePostProps {
   open: boolean;
@@ -43,6 +44,7 @@ const CreatePost: React.FC<CreatePostProps> = ({ open, setOpen }) => {
         // Dispatch the newly created post to Redux store
         dispatch(addPosts([response.post]));  // Add the new post as an array
         console.log("Post added and dispatched to the store");
+        toast.success(response.message);
         
         // Clear the form after successful post creation
         setCaption('');
@@ -55,6 +57,7 @@ const CreatePost: React.FC<CreatePostProps> = ({ open, setOpen }) => {
       }
     } catch (error) {
       console.error('Error creating post:', error);
+      toast.error('Failed to create post. Please try again.');
       setError('Failed to create post. Please try again.');
     }
   };

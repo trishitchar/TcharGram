@@ -94,8 +94,21 @@ export async function addpost(formData: FormData): Promise<any> {
   }
 }
 
-export async function deletePost() {
-  console.log("delete post api from frontend")
+export async function deletePost(postId: string): Promise<any> {
+  try {
+    const response = await authFetch(`/deletePost/${postId}`,{
+      method: 'POST'
+    })
+    if (!response.ok) {
+      console.log("post delete front 2") 
+      throw new Error('Failed to delete post');
+    }
+    const responseData = await response.json();
+    return responseData;
+  } catch (error) {
+    console.error('Error deleting post:', error);
+    throw error;
+  }
 }
 
 export async function getAllPosts(page: number = 1, limit: number = 10): Promise<ApiResponse> {

@@ -101,6 +101,7 @@ const Login: React.FC = () => {
                 </Button>
               </div>
             </form>
+            <p className='mt-2 cursor-pointer hover:text-blue-800' onClick={() => navigate('/register')}>Do not have any account? Sign up</p>
           </div>
         </div>
       </div>
