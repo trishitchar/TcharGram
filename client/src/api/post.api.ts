@@ -100,7 +100,7 @@ export async function deletePost(postId: string): Promise<any> {
       method: 'POST'
     })
     if (!response.ok) {
-      console.log("post delete front 2") 
+      // console.log("post delete front 2") 
       throw new Error('Failed to delete post');
     }
     const responseData = await response.json();
@@ -124,6 +124,38 @@ export async function getAllPosts(page: number = 1, limit: number = 10): Promise
     return data;
   } catch (error) {
     console.error('Error fetching posts:', error);
+    throw error;
+  }
+}
+
+export async function likePost(postId: string): Promise<any> {
+  try {
+    const response = await authFetch(`/likePost/${postId}`, {
+      method: 'POST'
+    });
+    if (!response.ok) {
+      throw new Error('Failed to like post');
+    }
+    const responseData = await response.json();
+    return responseData;
+  } catch (error) {
+    console.error('Error liking post:', error);
+    throw error;
+  }
+}
+
+export async function dislikePost(postId: string): Promise<any> {
+  try {
+    const response = await authFetch(`/dislikePost/${postId}`, {
+      method: 'POST'
+    });
+    if (!response.ok) {
+      throw new Error('Failed to dislike post');
+    }
+    const responseData = await response.json();
+    return responseData;
+  } catch (error) {
+    console.error('Error disliking post:', error);
     throw error;
   }
 }
