@@ -4,7 +4,9 @@ const Stories: React.FC = ()=> {
     return (
         <div className="flex space-x-4 mb-4 overflow-x-auto">
           {[...Array(8)].map((_, i) => (
-            <div key={i} className="w-16 h-16 rounded-full bg-gray-300 flex-shrink-0"></div>
+            <div key={i} className="w-16 h-16 rounded-full bg-gray-300 flex-shrink-0">
+              <img src="/profilepic.png" alt="image" />
+            </div>
           ))}
         </div>
     )

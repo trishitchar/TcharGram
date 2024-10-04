@@ -1,15 +1,1 @@
-- sitename.com/profile/(mongoid) later will add = sitename.com/username (anyone can view)
-- private public profile 
-- if possible stories
-- cashing technique maybe like redis or something
-- micro service for more user handle Microservices Architecture:
-- Load Balancing round robbin
-- Caching Strategy: cdn or radis
-- Database Optimization:
-- Asynchronous Processing:
-- Content Delivery Network (CDN):
-- Auto-scaling:
-- Real-time Communication:
-- Rate Limiting and Throttling:
-- Data Compression if user have low internet then low quality content like yt change the quality
-- Optimized Search
+first page

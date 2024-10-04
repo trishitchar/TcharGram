@@ -46,7 +46,7 @@ const ViewPostDetails: React.FC<ViewPostDetailsProps> = ({ post, isOpen, onClose
                 <span className="font-semibold mr-2">{post.author.username}</span>
                 <span>{post.caption}</span>
               </div>
-              {post.comments.map((comment) => (
+              {post.comments.map((comment:any) => (
                 <div key={comment._id} className="mb-2">
                   <span className="font-semibold mr-2">{comment.author.username}</span>
                   <span>{comment.text}</span>

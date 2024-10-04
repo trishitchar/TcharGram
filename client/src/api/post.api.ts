@@ -88,6 +88,8 @@ export async function createPost(formData: FormData): Promise<any> {
       throw new Error('Failed to create post');
     }
 
+    // console.log('post api',response)
+
     return await response.json();
   } catch (error) {
     console.error('Error creating post:', error);

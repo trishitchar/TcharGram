@@ -1,8 +1,9 @@
 import React, { useState, useRef } from 'react';
 import { Dialog, DialogContent } from '../ui/dialog'; 
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { createPost } from '@/api/post.api.ts';
+import { addPosts } from '@/redux/slices/allPostSlice';
 
 interface CreatePostProps {
   open: boolean;
@@ -17,39 +18,47 @@ const CreatePost: React.FC<CreatePostProps> = ({ open, setOpen }) => {
   const imageRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
 
+
+  const dispatch = useDispatch();
   const currentUser = useSelector((state: RootState) => state.auth.user);
 
   const createPostHandler = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-
+  
     try {
       if (!file || !caption || !currentUser) {
         setError('Image, caption, or user is missing.');
         return;
       }
-
+  
       const formData = new FormData();
       formData.append('caption', caption);
       formData.append('image', file);
       formData.append('userId', currentUser._id);
-
+  
       const response = await createPost(formData);
-
-      console.log('Post created successfully:', response);
-
-      // Clear the form after post creation
-      setCaption('');
-      setFile(null);
-      setImagePreview(null);
-      setImageUploaded(false);
-      setOpen(false); // Close dialog after post creation
-
+  
+      if (response.success && response.post) {
+        // Dispatch the newly created post to Redux store
+        dispatch(addPosts([response.post]));  // Add the new post as an array
+        console.log("Post added and dispatched to the store");
+        
+        // Clear the form after successful post creation
+        setCaption('');
+        setFile(null);
+        setImagePreview(null);
+        setImageUploaded(false);
+        setOpen(false); // Close the modal
+      } else {
+        setError('Failed to create post.');
+      }
     } catch (error) {
       console.error('Error creating post:', error);
       setError('Failed to create post. Please try again.');
     }
   };
+  
 
   const handleImageUpload = async () => {
     if (imageRef.current && imageRef.current.files?.length) {

@@ -29,6 +29,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
 
   const deletePostHandler = () => {
     alert("Post deleted");
+    setOpenComponent('none');
   };
 
   const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,46 +44,52 @@ const Post: React.FC<PostProps> = ({ post }) => {
   };
 
   return (
-    <div className="bg-white border rounded-md mb-4">
-      <div className="flex justify-between items-center">
-        <div className="p-4 flex gap-3">
-          <div className="w-8 h-8">
+    <div className="bg-white border rounded-lg mb-4">
+      <div className="flex justify-between items-center p-4">
+        <div className="flex items-center gap-3">
+          {/* author profilepicture */}
+          <div className="w-10 h-10 overflow-hidden rounded-full">
             <img
               src={post.author?.profilePicture}
               alt="userIcon"
-              className="w-full rounded-full"
+              className="w-full h-full object-cover"
             />
           </div>
+          {/* author username */}
           <p className="font-semibold">{post.author?.username}</p>
         </div>
-        <Dialog open={openComponent === 'optionsDialog'} onOpenChange={() => setOpenComponent('none')}>
+        {/* 3 dot unfollow fav delete */}
+        <Dialog open={openComponent === 'optionsDialog'} onOpenChange={() => setOpenComponent(prev => prev === 'optionsDialog' ? 'none' : 'optionsDialog')}>
           <DialogTrigger asChild>
-            <span onClick={() => handleDialogOpen('optionsDialog')}>
-              <HiDotsHorizontal className="cursor-pointer" />
+            <span className="cursor-pointer">
+              <HiDotsHorizontal />
             </span>
           </DialogTrigger>
           <DialogContent className="flex flex-col items-center text-sm text-center">
-            <Button variant="ghost" className="cursor-pointer w-fit text-red-400 font-bold">
+            <Button variant="ghost" className="w-full text-red-400 font-bold">
               Unfollow
             </Button>
-            <Button variant="ghost" className="cursor-pointer w-fit">
+            <Button variant="ghost" className="w-full">
               Add to fav
             </Button>
-            <Button variant="ghost" className="cursor-pointer w-fit" onClick={deletePostHandler}>
+            <Button variant="ghost" className="w-full" onClick={deletePostHandler}>
               Delete
             </Button>
           </DialogContent>
         </Dialog>
       </div>
-      <div className="justify-center items-center w-full">
+      {/* post photo */}
+      <div className="w-full">
         <img src={post.image} alt="Post" className="w-full" />
       </div>
+      {/* post below div like share comment */}
       <div className="p-4">
         <div className="flex space-x-4 mb-2">
           <button>Like</button>
           <button onClick={() => handleDialogOpen('commentsDialog')}>Comment</button>
           <button>Share</button>
         </div>
+        {/* like count */}
         <p>{post.likes?.length} likes</p>
         <p>
           <strong>{post.author?.username}</strong> {post.caption}
@@ -108,7 +115,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
           />
           {comment.trim() && (
             <button
-              className="bg-blue-600 text-white p-2 rounded-r-md ml-2"
+              className="bg-blue-600 text-white p-2 rounded-r-md"
               onClick={handlePostComment}
             >
               Post
