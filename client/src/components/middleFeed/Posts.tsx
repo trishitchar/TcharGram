@@ -8,6 +8,7 @@ import { RootState } from '@/redux/store';
 const Posts: React.FC = () => {
   const dispatch = useDispatch();
   const posts = useSelector((state: RootState) => state.posts.posts);
+
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -57,7 +58,10 @@ const Posts: React.FC = () => {
         </div>
       )}
       {/* sending data to its child post components */}
-      {Array.isArray(posts) && posts.map((post) => (
+      {
+        // temp remove
+      // Array.isArray(posts) &&
+       posts.map((post) => (
         <Post key={post._id} post={post} />
       ))}
       {/* loadmore component */}

@@ -7,6 +7,10 @@ interface User {
   username: string;
   email: string;
   profilePicture: string;
+  followers: string[];
+  following: string[];
+  posts: string[];
+  bookmarks: string[];
   // Add any other properties you need
 }
 

@@ -4,9 +4,10 @@ import { HiDotsHorizontal } from "react-icons/hi";
 import { Button } from '../ui/button';
 import ViewAllComment from './ViewAllComment';
 import { CommentType, deletePost, PostType } from '@/api/post.api';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import toast from 'react-hot-toast';
+import { removePost } from '@/redux/slices/allPostSlice';
 
 interface PostProps {
   post: PostType;
@@ -17,6 +18,7 @@ type OpenComponent = 'none' | 'optionsDialog' | 'commentsDialog';
 const Post: React.FC<PostProps> = ({ post }) => {
   const [comment, setComment] = useState<string>('');
   const [openComponent, setOpenComponent] = useState<OpenComponent>('none');
+  const dispatch = useDispatch();
   const currentUser = useSelector((state: RootState) => state.auth.user)
 
   const handleDialogOpen = (component: OpenComponent) => {
@@ -26,12 +28,10 @@ const Post: React.FC<PostProps> = ({ post }) => {
   const deletePostHandler = async () => {
     try {
       const response = await deletePost(post._id);
+      dispatch(removePost(post._id))
   
-      if (response && response.message) {
-        toast.success(response.message);
-      } else {
-        toast.success('Post deleted successfully');
-      }
+      toast.success(response.message || 'Post deleted successfully');
+
       setOpenComponent('none');
     } catch (error) {
       toast.error('Failed to delete post');
@@ -73,9 +73,14 @@ const Post: React.FC<PostProps> = ({ post }) => {
             </span>
           </DialogTrigger>
           <DialogContent className="flex flex-col items-center text-sm text-center">
-            <Button variant="ghost" className="w-full text-red-400 font-bold">
-              Unfollow
-            </Button>
+            {
+              (currentUser?._id !== post?.author?._id) &&
+              <Button variant="ghost" className="w-full text-red-400 font-bold">
+                {
+                  currentUser?.following.some((id) => id === post?.author?._id) ? 'Unfollow' : 'Follow'
+                }
+              </Button>
+            }
             <Button variant="ghost" className="w-full">
               Add to fav
             </Button>
