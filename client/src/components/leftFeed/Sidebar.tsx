@@ -15,6 +15,7 @@ import { userBaseURL } from '@/data/data';
 import { RootState } from "@/redux/store"; 
 import { logout } from "@/redux/slices/authSlice";
 import CreatePost from "./CreatePost";
+import { GiMoebiusTriangle } from "react-icons/gi";
 
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
@@ -87,14 +88,17 @@ const Sidebar: React.FC = () => {
   return (
     <div className="w-64 h-screen bg-white border-r flex flex-col justify-between shadow-md">
       <div className="p-6">
-        <h1 className="text-3xl font-semibold mb-8 text-gray-800">Instagram</h1>
+        <div className="flex items-center mb-8">
+          <GiMoebiusTriangle className="text-2xl mr-2" />
+          <h1 className="text-xl font-semibold text-gray-800">Tchargram</h1>
+        </div>
         {sidebarItems.map(({ icon, text }) => (
           <Button
             onClick={() => handleClick(text)}
             key={text}
             className="flex items-center space-x-4 py-3 px-4 mb-2 rounded-lg text-gray-300 hover:bg-gray-200 hover:text-black transition-colors duration-200"
           >
-            {icon}
+            <span className="flex items-center">{icon}</span>
             <span className="text-base font-medium">{text}</span>
           </Button>
         ))}

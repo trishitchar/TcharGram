@@ -33,7 +33,7 @@ export async function getProfile(userId:string) {
         const response = await authFetch(`/profile/${userId}`,{
             method: 'GET'
         });
-        if(!response.ok) throw new Error('Failed to create post');
+        if(!response.ok) throw new Error('Failed to getProfile');
     
         const responseData = await response.json();
         return responseData;

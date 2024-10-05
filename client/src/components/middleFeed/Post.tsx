@@ -142,7 +142,8 @@ const Post: React.FC<PostProps> = ({ post }) => {
             {post.author?.username || defaultUsername}
           </Link>
           {
-            (currentUser?._id === post?.author?._id) && <span className='bg-gray-400 text-center px-2 rounded-2xl'>author</span>
+            (currentUser?._id === post?.author?._id) && 
+              <p className='bg-gray-400 text-center justify-center items-center px-2 rounded-2xl'>author</p>
           }
         </div>
         <Dialog open={openComponent === 'optionsDialog'} onOpenChange={() => setOpenComponent(prev => prev === 'optionsDialog' ? 'none' : 'optionsDialog')}>
