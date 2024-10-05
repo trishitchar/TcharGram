@@ -1,6 +1,5 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import Sidebar from '../leftFeed/Sidebar';
 
 interface User {
   _id: string;
@@ -15,9 +14,6 @@ const ExplorePeoplePage: React.FC = () => {
 
   return (
     <div className="flex h-screen">
-      {/* Sidebar on the left */}
-      <Sidebar />
-
       {/* Main content: suggested users on the right */}
       <div className="flex-1 p-6 overflow-y-auto">
         <p className="font-semibold text-gray-500 mb-4">All Suggested Users</p>

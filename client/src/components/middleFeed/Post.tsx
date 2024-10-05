@@ -9,6 +9,7 @@ import { RootState } from '@/redux/store';
 import toast from 'react-hot-toast';
 import { addComment, removePost, setPosts } from '@/redux/slices/allPostSlice';
 import { FaHeart, FaRegHeart, FaRegComment, FaRegShareSquare } from "react-icons/fa";
+import { Link } from 'react-router-dom';
 
 interface PostProps {
   post: PostType;
@@ -133,7 +134,9 @@ const Post: React.FC<PostProps> = ({ post }) => {
               className="w-full h-full object-cover"
             />
           </div>
-          <p className="font-semibold">{post.author?.username || defaultUsername}</p>
+          <Link to={`/profile/${post.author?._id}`} className="font-semibold">
+            {post.author?.username || defaultUsername}
+          </Link>
         </div>
         <Dialog open={openComponent === 'optionsDialog'} onOpenChange={() => setOpenComponent(prev => prev === 'optionsDialog' ? 'none' : 'optionsDialog')}>
           <DialogTrigger asChild>

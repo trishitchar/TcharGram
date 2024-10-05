@@ -74,7 +74,7 @@ const Sidebar: React.FC = () => {
         logOutHandler();
         break;
       case 'Profile':
-        navigate('/profile');
+        navigate(`/profile/${user?._id}`);
         break;
       case 'Create':
         setOpen(true);
