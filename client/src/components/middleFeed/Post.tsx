@@ -1,3 +1,6 @@
+// one problem I found if I click on any user <Link to={`/profile/${post.author?._id} this will open up the user profile but showing extra things like edit profile, etc, I've used currentUserPost to fetch from backend, can use getAllPosts too
+// one idea is currentUserPost acts like insta private id you can't see other's post
+// but getAllPosts can see all user post kinda like public profile
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '../ui/dialog';
 import { HiDotsHorizontal } from "react-icons/hi";
@@ -138,6 +141,9 @@ const Post: React.FC<PostProps> = ({ post }) => {
           <Link to={`/profile/${post.author?._id}`} className="font-semibold">
             {post.author?.username || defaultUsername}
           </Link>
+          {
+            (currentUser?._id === post?.author?._id) && <span className='bg-gray-400 text-center px-2 rounded-2xl'>author</span>
+          }
         </div>
         <Dialog open={openComponent === 'optionsDialog'} onOpenChange={() => setOpenComponent(prev => prev === 'optionsDialog' ? 'none' : 'optionsDialog')}>
           <DialogTrigger asChild>

@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getProfile } from '@/api/user.api';
+// import { getAllPosts } from '@/api/post.api';
 import { getCurrentUserPost } from '@/api/post.api';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import { User, PostType } from '@/data/interface.data';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 const Profile: React.FC = () => {
+  const currentUser = useSelector((state: RootState) => state.auth.user);
+
   const { userId } = useParams<{ userId: string }>();
   const [user, setUser] = useState<User | null>(null);
   const [posts, setPosts] = useState<PostType[]>([]);
@@ -17,6 +22,11 @@ const Profile: React.FC = () => {
     const fetchProfileAndPosts = async () => {
       try {
         const response = await getProfile(userId!);
+
+        // eita emon kora jete pare like if user set private profile then getprofile will call otherwise for public profile getAllpost
+        // public profile
+        // const allPosts = await getAllPosts();
+        // private profile 
         const allPosts = await getCurrentUserPost();
 
         if (response.success && allPosts.success) {
@@ -64,7 +74,9 @@ const Profile: React.FC = () => {
               <span><strong>{user.following.length}</strong> following</span>
             </div>
             <p className="mb-2">{user.bio}</p>
-            <Button variant="outline">Edit Profile</Button>
+            {
+              (currentUser?._id === userId) && <Button variant="outline">Edit Profile</Button>
+            }
           </div>
         </div>
 
