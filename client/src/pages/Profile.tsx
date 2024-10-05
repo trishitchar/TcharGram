@@ -1,33 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getProfile } from '@/api/user.api';
+import { getCurrentUserPost } from '@/api/post.api';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
-import { User } from '@/data/interface.data';
+import { User, PostType } from '@/data/interface.data';
 
 const Profile: React.FC = () => {
   const { userId } = useParams<{ userId: string }>();
   const [user, setUser] = useState<User | null>(null);
+  const [posts, setPosts] = useState<PostType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchProfile = async () => {
+    const fetchProfileAndPosts = async () => {
       try {
         const response = await getProfile(userId!);
-        if (response.success) {
+        const allPosts = await getCurrentUserPost();
+
+        if (response.success && allPosts.success) {
           setUser(response.user);
+          setPosts(allPosts.posts.filter((post: PostType) => post.author._id === userId)); //jegula OP er post only, tho backend handled it already 
         } else {
-          setError('Failed to load profile');
+          setError('Failed to load profile or posts');
         }
       } catch (error) {
-        setError('An error occurred while fetching the profile');
+        setError('An error occurred while fetching the profile or posts');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchProfile();
+    fetchProfileAndPosts();
   }, [userId]);
 
   if (loading) {
@@ -63,12 +68,30 @@ const Profile: React.FC = () => {
           </div>
         </div>
 
+        {/* Post Grid */}
         <div className="grid grid-cols-3 gap-1">
-          {user.posts.map((postId) => (
-            <div key={postId} className="aspect-square bg-gray-200">
-              {/* You would typically fetch and display the actual post image here */}
-              <div className="w-full h-full flex items-center justify-center">
-                Post {postId}
+          {posts.map((post) => (
+            <div 
+              key={post._id} 
+              className="relative aspect-square bg-gray-200 group"
+            >
+              {/* Image */}
+              <img 
+                src={post.image} 
+                alt={post.caption} 
+                className="object-cover w-full h-full"
+              />
+
+              {/* Hover Overlay */}
+              <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-opacity">
+                <div className="text-center">
+                  <div className="mb-1">
+                    <span className="font-bold">{post.likes.length}</span> Likes
+                  </div>
+                  <div>
+                    <span className="font-bold">{post.comments.length}</span> Comments
+                  </div>
+                </div>
               </div>
             </div>
           ))}

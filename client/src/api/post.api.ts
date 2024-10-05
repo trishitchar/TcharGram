@@ -143,3 +143,19 @@ export async function addCommentt(postId: string, text: string): Promise<AddComm
     throw error;
   }
 }
+
+export async function getCurrentUserPost() {
+  try {
+    const response = await authFetch('/currentUserPost',{
+      method: 'GET',
+    })
+    if (!response.ok) {
+      throw new Error('Failed to add comment');
+    }
+    const responseData = await response.json();
+    return responseData;
+  } catch (error) {
+    console.error('Error fetching all Post', error);
+    throw error;
+  }
+}
