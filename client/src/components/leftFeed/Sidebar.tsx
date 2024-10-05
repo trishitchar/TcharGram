@@ -54,7 +54,7 @@ const Sidebar: React.FC = () => {
       if (response.status === 200 || response.data.success) {
         localStorage.removeItem('token'); 
         document.cookie = 'token=; Max-Age=0';
-        dispatch(logout()); // Dispatch the logout action
+        dispatch(logout());
         navigate('/login');
         console.log('Successfully logged out');
       } else {

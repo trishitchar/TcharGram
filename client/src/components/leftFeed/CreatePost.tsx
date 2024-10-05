@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Dialog, DialogContent } from '../ui/dialog'; 
+import { Dialog, DialogContent, DialogTitle } from '../ui/dialog'; 
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { addpost } from '@/api/post.api.ts';
@@ -52,6 +52,8 @@ const CreatePost: React.FC<CreatePostProps> = ({ open, setOpen }) => {
         setImagePreview(null);
         setImageUploaded(false);
         setOpen(false); // Close the modal
+        window.location.reload();
+
       } else {
         setError('Failed to create post.');
       }
@@ -85,7 +87,8 @@ const CreatePost: React.FC<CreatePostProps> = ({ open, setOpen }) => {
   return (
     <div>
       <Dialog open={open} onOpenChange={() => setOpen(false)}>
-        <DialogContent>
+        <DialogContent aria-describedby=''>
+          <DialogTitle className='hidden'></DialogTitle> 
           <form onSubmit={createPostHandler}>
             <label htmlFor="post-content">Post Caption</label>
             <textarea

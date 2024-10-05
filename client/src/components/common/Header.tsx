@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { logout } from "@/redux/slices/authSlice";
 import { decodeToken } from "@/middleware/DecodedToken";
 import { Menu, X } from 'lucide-react';
+import toast from "react-hot-toast";
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -43,6 +44,7 @@ const Header: React.FC = () => {
         document.cookie = "token=; Max-Age=0";
         dispatch(logout());
         navigate("/login");
+        toast.success('logout done');
         console.log("Successfully logged out");
       } else {
         console.error("Logout failed:", response.data.message);

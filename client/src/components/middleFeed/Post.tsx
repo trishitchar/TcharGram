@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog';
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '../ui/dialog';
 import { HiDotsHorizontal } from "react-icons/hi";
-import { Button } from '../ui/button';
 import ViewAllComment from './ViewAllComment';
 import {deletePost, likePost, dislikePost, addCommentt } from '@/api/post.api';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,6 +10,7 @@ import { addComment, removePost, setPosts } from '@/redux/slices/allPostSlice';
 import { FaHeart, FaRegHeart, FaRegComment, FaRegShareSquare } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import { CommentType, PostType } from '@/data/interface.data';
+import { Button } from '../ui/button';
 
 interface PostProps {
   post: PostType;
@@ -145,22 +145,37 @@ const Post: React.FC<PostProps> = ({ post }) => {
               <HiDotsHorizontal />
             </span>
           </DialogTrigger>
-          <DialogContent className="flex flex-col items-center text-sm text-center">
-            {currentUser && (
-              <>
-                {currentUser._id !== post.author?._id && (
-                  <Button variant="ghost" className="w-full text-red-400 font-bold">
-                    {currentUser.following?.some((id) => id === post.author?._id) ? 'Unfollow' : 'Follow'}
+          <DialogContent aria-describedby='' className="sm:max-w-[425px]">
+            <DialogTitle className="sr-only">Post Options</DialogTitle>
+            <div className="flex flex-col w-full gap-2">
+              {currentUser && (
+                <>
+                  {currentUser._id !== post.author?._id && (
+                    <Button 
+                      variant="ghost" 
+                      className="w-full py-6 text-base font-semibold hover:bg-gray-100"
+                    >
+                      {currentUser.following?.some((id) => id === post.author?._id) ? 'Unfollow' : 'Follow'}
+                    </Button>
+                  )}
+                  <Button 
+                    variant="ghost" 
+                    className="w-full py-6 text-base font-semibold hover:bg-gray-100"
+                  >
+                    Add to favorites
                   </Button>
-                )}
-                <Button variant="ghost" className="w-full">Add to fav</Button>
-                {currentUser._id === post.author?._id && (
-                  <Button variant="ghost" className="w-full" onClick={deletePostHandler}>
-                    Delete
-                  </Button>
-                )}
-              </>
-            )}
+                  {currentUser._id === post.author?._id && (
+                    <Button 
+                      variant="ghost" 
+                      className="w-full py-6 text-base font-semibold text-red-500 hover:bg-red-50"
+                      onClick={deletePostHandler}
+                    >
+                      Delete
+                    </Button>
+                  )}
+                </>
+              )}
+            </div>
           </DialogContent>
         </Dialog>
       </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, DialogContent } from '../ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
 import { CommentType, PostType } from '@/data/interface.data';
 
 
@@ -38,7 +38,8 @@ const ViewAllComment: React.FC<ViewAllCommentProps> = ({
 
   return (
     <Dialog open={openComponent === 'commentsDialog'} onOpenChange={() => handleDialogOpen('none')}>
-      <DialogContent className="max-w-[80vw] max-h-[80vh] w-full h-full p-0 flex flex-row overflow-hidden">
+      <DialogContent aria-describedby='' className="max-w-[80vw] max-h-[80vh] w-full h-full p-0 flex flex-row overflow-hidden">
+      <DialogTitle className='hidden'></DialogTitle> 
         {/* Image Section */}
         <div className="w-2/5 bg-black flex items-center justify-center">
           <img
