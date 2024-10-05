@@ -1,19 +1,19 @@
 import React from 'react';
 import { Dialog, DialogContent } from '../ui/dialog';
-import { PostType } from '@/api/post.api';
+import { CommentType, PostType } from '@/data/interface.data';
 
 
-interface CommentType {
-  _id: string;
-  text: string;
-  author: {
-    _id: string;
-    username: string;
-    profilePicture?: string;
-  };
-  createdAt: string;
-  updatedAt: string;
-}
+// interface CommentType {
+//   _id: string;
+//   text: string;
+//   author: {
+//     _id: string;
+//     username: string;
+//     profilePicture?: string;
+//   };
+//   createdAt: string;
+//   updatedAt: string;
+// }
 
 interface ViewAllCommentProps {
   post: PostType & { comments: CommentType[] }; // Extend PostType to include comments

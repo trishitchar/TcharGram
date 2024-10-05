@@ -3,22 +3,11 @@ import { useParams } from 'react-router-dom';
 import { getProfile } from '@/api/user.api';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
-
-interface UserProfile {
-  _id: string;
-  username: string;
-  email: string;
-  profilePicture: string;
-  bio: string;
-  followers: string[];
-  following: string[];
-  posts: string[];
-  gender: string;
-}
+import { User } from '@/data/interface.data';
 
 const Profile: React.FC = () => {
   const { userId } = useParams<{ userId: string }>();
-  const [user, setUser] = useState<UserProfile | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 

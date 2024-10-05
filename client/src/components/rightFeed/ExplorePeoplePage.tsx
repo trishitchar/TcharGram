@@ -1,10 +1,16 @@
+import { User } from '@/data/interface.data';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 
-interface User {
-  _id: string;
-  username: string;
-  profilePicture?: string;
+// interface User {
+//   _id: string;
+//   username: string;
+//   profilePicture?: string;
+//   isFollowing?: boolean;
+// }
+
+interface nowUser extends User{
+  // user: User;
   isFollowing?: boolean;
 }
 
@@ -19,7 +25,7 @@ const ExplorePeoplePage: React.FC = () => {
         <p className="font-semibold text-gray-500 mb-4">All Suggested Users</p>
         <ul className="space-y-4">
           {users && users.length > 0 ? (
-            users.map((user: User) => (
+            users.map((user: nowUser) => (
               <li key={user._id} className="flex items-center justify-between">
                 <div className="flex items-center">
                   {user.profilePicture ? (

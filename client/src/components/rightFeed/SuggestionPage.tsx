@@ -3,18 +3,24 @@ import axios from 'axios';
 import { decodeToken } from '../../middleware/DecodedToken';
 import { userBaseURL } from '@/data/data';
 import { useNavigate } from 'react-router-dom';
+import { User } from '@/data/interface.data';
 
-interface User {
-  _id: string;
-  username: string;
-  profilePicture?: string;
+// interface User {
+//   _id: string;
+//   username: string;
+//   profilePicture?: string;
+//   isFollowing?: boolean;
+//   following: string[]; 
+// }
+
+interface nowUser extends User{
+  // user: User;
   isFollowing?: boolean;
-  following: string[]; 
 }
 
 const SuggestionPage: React.FC = () => {
-  const [users, setUsers] = useState<User[]>([]);
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [users, setUsers] = useState<nowUser[]>([]);
+  const [currentUser, setCurrentUser] = useState<nowUser | null>(null);
   const [followingList, setFollowingList] = useState<string[]>([]);
   const navigate = useNavigate();
 
@@ -33,7 +39,7 @@ const SuggestionPage: React.FC = () => {
     console.log("currentUserId"+currentUserId);
     if (currentUserId) {
       try {
-        const response = await axios.get<{ user: User; success: boolean }>(`${userBaseURL}/profile/${currentUserId}`, {
+        const response = await axios.get<{ user: nowUser; success: boolean }>(`${userBaseURL}/profile/${currentUserId}`, {
           withCredentials: true
         });
         setCurrentUser(response.data.user);

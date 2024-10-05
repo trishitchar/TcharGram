@@ -1,18 +1,8 @@
 // redux/authSlice.ts
+import { User } from '@/data/interface.data';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 // Define the User interface with expected properties
-interface User {
-  _id: string;
-  username: string;
-  email: string;
-  profilePicture: string;
-  followers: string[];
-  following: string[];
-  posts: string[];
-  bookmarks: string[];
-  // Add any other properties you need
-}
 
 interface AuthState {
   user: User | null; // Ensure the user is an object or null, not a string

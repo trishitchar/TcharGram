@@ -3,13 +3,14 @@ import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog';
 import { HiDotsHorizontal } from "react-icons/hi";
 import { Button } from '../ui/button';
 import ViewAllComment from './ViewAllComment';
-import { CommentType, deletePost, likePost, dislikePost, PostType, addCommentt } from '@/api/post.api';
+import {deletePost, likePost, dislikePost, addCommentt } from '@/api/post.api';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import toast from 'react-hot-toast';
 import { addComment, removePost, setPosts } from '@/redux/slices/allPostSlice';
 import { FaHeart, FaRegHeart, FaRegComment, FaRegShareSquare } from "react-icons/fa";
 import { Link } from 'react-router-dom';
+import { CommentType, PostType } from '@/data/interface.data';
 
 interface PostProps {
   post: PostType;

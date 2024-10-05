@@ -1,7 +1,7 @@
 // src/redux/slices/postSlice.ts
 
+import { CommentType, PostType } from "@/data/interface.data";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CommentType, PostType } from "@/api/post.api.ts";
 
 interface AllPostsState {
   posts: PostType[];
