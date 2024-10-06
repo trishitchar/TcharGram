@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '@/redux/store';
 import { followorunfollow, suggestedUsers } from '@/api/user.api';
@@ -140,7 +140,9 @@ const SuggestionPage: React.FC = () => {
                     </div>
                   )}
                   <div>
-                    <p className="text-sm font-medium">{user.username}</p>
+                    <Link to={`/profile/${user._id}`} className="font-semibold">
+                      <p className="text-sm font-medium">{user.username}</p>
+                    </Link>
                     <p className="text-xs text-gray-500">Suggested for you</p>
                   </div>
                 </div>

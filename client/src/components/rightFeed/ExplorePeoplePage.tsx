@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { followorunfollow } from '@/api/user.api';
 import { RootState, AppDispatch } from '@/redux/store';
@@ -72,6 +72,7 @@ const ExplorePeoplePage: React.FC = () => {
           users.map((user) => (
             <div key={user._id} className="flex items-center justify-between p-4 bg-white rounded-lg shadow">
               <div className="flex items-center">
+                {/* profile pic */}
                 {user.profilePicture ? (
                   <img
                     src={user.profilePicture}
@@ -85,9 +86,12 @@ const ExplorePeoplePage: React.FC = () => {
                     </span>
                   </div>
                 )}
+                {/* username section */}
                 <div>
+                  <Link to={`/profile/${user._id}`} className="font-semibold">
                   <p className="font-medium">{user.username}</p>
                   {user.bio && <p className="text-sm text-gray-500">{user.bio}</p>}
+                  </Link>
                 </div>
               </div>
               <button
