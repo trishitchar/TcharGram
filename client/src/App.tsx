@@ -33,6 +33,7 @@ const App: React.FC = () => {
         <Route path="profile/:userId" element={<Profile />} />
         <Route path="explore/people" element={<ExplorePeoplePage />} />
         <Route path="/chat" element={<Chat />} />
+        {/* <Route path="/direct/inbox" element={<Chat />} /> */}
       </Route>
 
       <Route path="*" element={<NotFound />} />

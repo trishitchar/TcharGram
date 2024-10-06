@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { User } from '@/data/interface.data';
 
 export interface ExtendedUser extends User {
-  isFollowing: boolean;
+  isFollowing?: boolean;
 }
 
 interface SuggestedUsersState {
@@ -41,6 +41,11 @@ const suggestedUsersSlice = createSlice({
           : user
       );
     },
+    removeSuggestedUsers: (state) => {
+      state.users = [],
+      state.loading = false,
+      state.error = null
+    }
   },
 });
 
@@ -49,6 +54,7 @@ export const {
   fetchSuggestedUsersSuccess,
   fetchSuggestedUsersFailure,
   updateFollowStatus,
+  removeSuggestedUsers,
 } = suggestedUsersSlice.actions;
 
 export default suggestedUsersSlice.reducer;

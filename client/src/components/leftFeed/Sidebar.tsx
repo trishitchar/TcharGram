@@ -16,6 +16,8 @@ import { RootState } from "@/redux/store";
 import { logout } from "@/redux/slices/authSlice";
 import CreatePost from "./CreatePost";
 import { GiMoebiusTriangle } from "react-icons/gi";
+import { removeAllPosts } from "@/redux/slices/allPostSlice";
+import { removeSuggestedUsers } from "@/redux/slices/suggestedUsersSlice";
 
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
@@ -56,6 +58,8 @@ const Sidebar: React.FC = () => {
         localStorage.removeItem('token'); 
         document.cookie = 'token=; Max-Age=0';
         dispatch(logout());
+        dispatch(removeAllPosts());
+        dispatch(removeSuggestedUsers());
         navigate('/login');
         console.log('Successfully logged out');
       } else {
@@ -71,14 +75,29 @@ const Sidebar: React.FC = () => {
       case 'Home':
         navigate('/feed');
         break;
-      case 'LogOut':
-        logOutHandler();
+      case 'Search':
+        navigate('/feed');
+        break;
+      case 'Explore':
+        navigate('/feed');
+        break;
+      case 'Reels':
+        navigate('/feed');
+        break;
+      case 'Messages':
+        navigate('/chat');
+        break;
+      case 'Notifications':
+        navigate('/feed');
+        break;
+      case 'Create':
+        setOpen(true);
         break;
       case 'Profile':
         navigate(`/profile/${user?._id}`);
         break;
-      case 'Create':
-        setOpen(true);
+      case 'LogOut':
+        logOutHandler();
         break;
       default:
         console.log(`Clicked on ${text}`);

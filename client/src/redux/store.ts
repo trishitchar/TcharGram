@@ -22,7 +22,7 @@ const persistConfig: PersistConfig<RootState> = {
   key: 'root',
   version: 1,
   storage,
-  whitelist: ['auth'],  // Only persist `auth` slice
+  whitelist: ['auth','suggestedUsers'],  // Only persist `auth` slice
 };
 
 // Combine reducers

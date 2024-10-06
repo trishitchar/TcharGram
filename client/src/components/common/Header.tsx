@@ -8,6 +8,8 @@ import { logout } from "@/redux/slices/authSlice";
 import { decodeToken } from "@/middleware/DecodedToken";
 import { Menu, X } from 'lucide-react';
 import toast from "react-hot-toast";
+import { removeAllPosts } from "@/redux/slices/allPostSlice";
+import { removeSuggestedUsers } from "@/redux/slices/suggestedUsersSlice";
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -43,6 +45,8 @@ const Header: React.FC = () => {
         localStorage.removeItem("token");
         document.cookie = "token=; Max-Age=0";
         dispatch(logout());
+        dispatch(removeAllPosts());
+        dispatch(removeSuggestedUsers());
         navigate("/login");
         toast.success('logout done');
         console.log("Successfully logged out");
