@@ -4,6 +4,7 @@ import Cloudinary from "../utils/cloudinary.js";
 import { Post } from "../models/post.model.js";
 import { User } from "../models/user.model.js";
 import { Comment } from '../models/comment.model.js';
+import { getReceiverSocketId, io } from '../socketio/socketio.js';
 // Function to add a new post
 export const addNewPost = async (req, res) => {
     try {
@@ -145,17 +146,19 @@ export const likePost = async (req, res) => {
         const user = await User.findById(currentUserId).select('username profilePicture');
         // Notify the post owner
         const postOwnerId = post.author.toString();
-        // if (postOwnerId !== userId) {
-        //     const notification = {
-        //         type: 'like',
-        //         userId,
-        //         userDetails: user,
-        //         postId,
-        //         message: 'Your post was liked',
-        //     };
-        //     const postOwnerSocketId = getReceiverSocketId(postOwnerId);
-        //     io.to(postOwnerSocketId).emit('notification', notification);
-        // }
+        if (postOwnerId !== currentUserId) {
+            const notification = {
+                type: 'like',
+                userId: currentUserId,
+                userDetails: user,
+                postId,
+                message: 'Your post was liked',
+            };
+            const postOwnerSocketId = getReceiverSocketId(postOwnerId);
+            if (postOwnerSocketId) {
+                io.to(postOwnerSocketId).emit('notification', notification);
+            }
+        }
         return res.status(200).json({ message: 'Post liked', success: true });
     }
     catch (error) {
@@ -174,19 +177,20 @@ export const dislikePost = async (req, res) => {
         await post.updateOne({ $pull: { likes: currentUserId } });
         // Get the user who disliked the post
         const user = await User.findById(currentUserId).select('username profilePicture');
-        // Notify the post owner
         const postOwnerId = post.author.toString();
-        // if (postOwnerId !== currentUserId) {
-        //     const notification = {
-        //         type: 'dislike',
-        //         currentUserId,
-        //         userDetails: user,
-        //         postId,
-        //         message: 'Your post was disliked',
-        //     };
-        //     const postOwnerSocketId = getReceiverSocketId(postOwnerId);
-        //     io.to(postOwnerSocketId).emit('notification', notification);
-        // }
+        if (postOwnerId !== currentUserId) {
+            const notification = {
+                type: 'dislike',
+                userId: currentUserId,
+                userDetails: user,
+                postId,
+                message: 'Your post was disliked',
+            };
+            const postOwnerSocketId = getReceiverSocketId(postOwnerId);
+            if (postOwnerSocketId) {
+                io.to(postOwnerSocketId).emit('notification', notification);
+            }
+        }
         return res.status(200).json({ message: 'Post disliked', success: true });
     }
     catch (error) {
