@@ -1,112 +1,73 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { decodeToken } from '../../middleware/DecodedToken';
-import { userBaseURL } from '@/data/data';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User } from '@/data/interface.data';
-
-// interface User {
-//   _id: string;
-//   username: string;
-//   profilePicture?: string;
-//   isFollowing?: boolean;
-//   following: string[]; 
-// }
-
-interface nowUser extends User{
-  // user: User;
-  isFollowing?: boolean;
-}
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState, AppDispatch } from '@/redux/store';
+import { followorunfollow, suggestedUsers } from '@/api/user.api';
+import { 
+  fetchSuggestedUsersStart,
+  fetchSuggestedUsersSuccess,
+  fetchSuggestedUsersFailure,
+  updateFollowStatus as updateSuggestedFollowStatus,
+  ExtendedUser
+} from '@/redux/slices/suggestedUsersSlice';
+import { updateFollowStatus as updateAuthFollowStatus } from '@/redux/slices/authSlice';
 
 const SuggestionPage: React.FC = () => {
-  const [users, setUsers] = useState<nowUser[]>([]);
-  const [currentUser, setCurrentUser] = useState<nowUser | null>(null);
-  const [followingList, setFollowingList] = useState<string[]>([]);
+  const currentUser = useSelector((state: RootState) => state.auth.user);
+  const { users, loading, error } = useSelector((state: RootState) => state.suggestedUsers);
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchCurrentUser();
-  }, []);
-
-  useEffect(() => {
     if (currentUser) {
-      fetchSuggestedUsers();
+      handleFetchSuggestedUsers();
     }
   }, [currentUser]);
 
-  const fetchCurrentUser = async () => {
-    const currentUserId = decodeToken();
-    console.log("currentUserId"+currentUserId);
-    if (currentUserId) {
-      try {
-        const response = await axios.get<{ user: nowUser; success: boolean }>(`${userBaseURL}/profile/${currentUserId}`, {
-          withCredentials: true
-        });
-        setCurrentUser(response.data.user);
-        setFollowingList(response.data.user.following);
-      } catch (error) {
-        console.error('Error fetching current user:', error);
+  const handleFetchSuggestedUsers = async () => {
+    dispatch(fetchSuggestedUsersStart());
+
+    try {
+      const response = await suggestedUsers();
+
+      if (response && Array.isArray(response.users)) {
+        const suggestedUsers = response.users.map((user: ExtendedUser) => ({
+          ...user,
+          isFollowing: currentUser?.following.includes(user._id) || false,
+        }));
+
+        dispatch(fetchSuggestedUsersSuccess(suggestedUsers));
+      } else {
+        dispatch(fetchSuggestedUsersFailure('No users found'));
       }
+    } catch (err) {
+      dispatch(fetchSuggestedUsersFailure('Failed to fetch suggested users'));
     }
   };
 
-  const fetchSuggestedUsers = async () => {
+  const handleFollowUnfollow = async (targetUserId: string) => {
     try {
-      const response = await axios.get<{ users: User[] }>(`${userBaseURL}/suggested`, {
-        withCredentials: true
-      });
-      const suggestedUsers = response.data.users.map((user: User) => ({
-        ...user,
-        isFollowing: followingList.includes(user._id)
-      }));
-      setUsers(suggestedUsers);
-    } catch (error) {
-      console.error('Error fetching suggested users:', error);
-    }
-  };
+      // Optimistic update
+      dispatch(updateSuggestedFollowStatus(targetUserId));
+      dispatch(updateAuthFollowStatus(targetUserId));
 
-  const followUnfollow = async (targetUserId: string) => {
-    try {
-      const response = await axios.post<{ success: boolean }>(
-        `${userBaseURL}/followorunfollow/${targetUserId}`,
-        {},
-        { withCredentials: true }
-      );
-
-      if (response.data.success) {
-        setUsers(prevUsers => 
-          prevUsers.map(user => 
-            user._id === targetUserId 
-              ? { ...user, isFollowing: !user.isFollowing } 
-              : user
-          )
-        );
-
-        // Update the followingList
-        setFollowingList(prevList => 
-          prevList.includes(targetUserId)
-            ? prevList.filter(id => id !== targetUserId)
-            : [...prevList, targetUserId]
-        );
-
-        // Update the currentUser's following list
-        setCurrentUser(prevUser => {
-          if (prevUser) {
-            const newFollowing = prevUser.following.includes(targetUserId)
-              ? prevUser.following.filter(id => id !== targetUserId)
-              : [...prevUser.following, targetUserId];
-            return { ...prevUser, following: newFollowing };
-          }
-          return prevUser;
-        });
+      const response = await followorunfollow(targetUserId);
+      
+      if (!response.success) {
+        // Revert if API call fails
+        dispatch(updateSuggestedFollowStatus(targetUserId));
+        dispatch(updateAuthFollowStatus(targetUserId));
       }
     } catch (error) {
+      // Revert on error
+      dispatch(updateSuggestedFollowStatus(targetUserId));
+      dispatch(updateAuthFollowStatus(targetUserId));
       console.error('Error in follow/unfollow operation:', error);
     }
   };
 
   const redirectToAllUsers = () => {
-    navigate('/explore/people', { state: { users } }); 
+    navigate('/explore/people', { state: { users } });
   };
 
   return (
@@ -115,38 +76,88 @@ const SuggestionPage: React.FC = () => {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
             {currentUser.profilePicture ? (
-              <img src={currentUser.profilePicture} alt={currentUser.username} className="w-12 h-12 rounded-full mr-3" />
+              <img
+                src={currentUser.profilePicture}
+                alt={currentUser.username}
+                className="w-12 h-12 rounded-full mr-3 object-cover"
+              />
             ) : (
-              <div className="w-12 h-12 rounded-full bg-gray-300 mr-3"></div>
+              <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center mr-3">
+                <span className="text-gray-500 text-xl uppercase">
+                  {currentUser.username[0]}
+                </span>
+              </div>
             )}
             <div>
               <p className="font-semibold">{currentUser.username}</p>
-              <p className="text-sm text-gray-500">{currentUser.username}</p>
+              <p className="text-sm text-gray-500">{currentUser.email}</p>
             </div>
           </div>
-          <button className="text-blue-500">Switch</button>
         </div>
       )}
+
       <div>
-        <p className="font-semibold text-gray-500 mb-2">Suggested for you</p>
-        <ul className="space-y-3">
-          {users.slice(0, 5).map((user) => (
-            <li key={user._id} className="flex items-center justify-between">
-              <div className="flex items-center">
-                {user.profilePicture ? (
-                  <img src={user.profilePicture} alt={user.username} className="w-8 h-8 rounded-full mr-2" />
-                ) : (
-                  <div className="w-8 h-8 rounded-full bg-gray-300 mr-2"></div>
-                )}
-                <p>{user.username}</p>
+        <div className="flex justify-between items-center mb-4">
+          <p className="font-semibold text-gray-500">Suggested for you</p>
+          <button 
+            onClick={redirectToAllUsers}
+            className="text-sm font-medium text-gray-900 hover:text-gray-700"
+          >
+            See All
+          </button>
+        </div>
+
+        {error && <p className="text-red-500 mb-2">{error}</p>}
+
+        {loading ? (
+          <div className="space-y-3">
+            {[...Array(5)].map((_, index) => (
+              <div key={index} className="animate-pulse flex justify-between items-center">
+                <div className="flex items-center">
+                  <div className="w-8 h-8 bg-gray-200 rounded-full mr-2" />
+                  <div className="h-4 bg-gray-200 rounded w-24" />
+                </div>
+                <div className="h-4 bg-gray-200 rounded w-16" />
               </div>
-              <button onClick={() => followUnfollow(user._id)} className="text-blue-500">
-                {user.isFollowing ? 'Unfollow' : 'Follow'}
-              </button>
-            </li>
-          ))}
-        </ul>
-        <button onClick={redirectToAllUsers} className="mt-4 text-blue-500">Show All Suggested</button>
+            ))}
+          </div>
+        ) : (
+          <ul className="space-y-3">
+            {users.slice(0, 5).map(user => (
+              <li key={user._id} className="flex items-center justify-between">
+                <div className="flex items-center">
+                  {user.profilePicture ? (
+                    <img
+                      src={user.profilePicture}
+                      alt={user.username}
+                      className="w-8 h-8 rounded-full mr-2 object-cover"
+                    />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-2">
+                      <span className="text-gray-500 text-sm uppercase">
+                        {user.username[0]}
+                      </span>
+                    </div>
+                  )}
+                  <div>
+                    <p className="text-sm font-medium">{user.username}</p>
+                    <p className="text-xs text-gray-500">Suggested for you</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => handleFollowUnfollow(user._id)}
+                  className={`text-sm font-medium ${
+                    user.isFollowing 
+                      ? 'text-gray-500 hover:text-gray-700' 
+                      : 'text-blue-500 hover:text-blue-600'
+                  }`}
+                >
+                  {user.isFollowing ? 'Following' : 'Follow'}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );

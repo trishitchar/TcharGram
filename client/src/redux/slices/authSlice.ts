@@ -1,15 +1,12 @@
-// redux/authSlice.ts
 import { User } from '@/data/interface.data';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-// Define the User interface with expected properties
-
 interface AuthState {
-  user: User | null; // Ensure the user is an object or null, not a string
+  user: User | null;
 }
 
 const initialState: AuthState = {
-  user: null, // Initial state is null
+  user: null,
 };
 
 const authSlice = createSlice({
@@ -20,10 +17,22 @@ const authSlice = createSlice({
       state.user = action.payload;
     },
     logout: (state) => {
-      state.user = null; // Clear the user on logout
+      state.user = null;
+    },
+    updateFollowStatus: (state, action: PayloadAction<string>) => {
+      if (state.user) {
+        const targetUserId = action.payload;
+        const isCurrentlyFollowing = state.user.following.includes(targetUserId);
+        
+        if (isCurrentlyFollowing) {
+          state.user.following = state.user.following.filter(id => id !== targetUserId);
+        } else {
+          state.user.following.push(targetUserId);
+        }
+      }
     },
   },
 });
 
-export const { setAuthUser, logout } = authSlice.actions;
+export const { setAuthUser, logout, updateFollowStatus } = authSlice.actions;
 export default authSlice.reducer;

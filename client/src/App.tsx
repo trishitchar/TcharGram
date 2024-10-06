@@ -9,6 +9,7 @@ import NotFound from './pages/NotFound';
 import Feed from './pages/Feed';
 import ExplorePeoplePage from './components/rightFeed/ExplorePeoplePage';
 import ProtectedLayout from './ProtectedLayout';
+import Chat from './pages/Chat';
 
 const ProtectedRoute: React.FC<{ element: React.ReactElement }> = ({ element }) => {
   const { isAuthenticated } = useAuth();
@@ -31,6 +32,7 @@ const App: React.FC = () => {
         <Route path="feed" element={<Feed />} />
         <Route path="profile/:userId" element={<Profile />} />
         <Route path="explore/people" element={<ExplorePeoplePage />} />
+        <Route path="/chat" element={<Chat />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />

@@ -12,6 +12,9 @@ interface CreatePostProps {
 }
 
 const CreatePost: React.FC<CreatePostProps> = ({ open, setOpen }) => {
+  const dispatch = useDispatch();
+  const currentUser = useSelector((state: RootState) => state.auth.user);
+
   const [caption, setCaption] = useState<string>('');
   const [imageUploaded, setImageUploaded] = useState<boolean>(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -20,8 +23,6 @@ const CreatePost: React.FC<CreatePostProps> = ({ open, setOpen }) => {
   const [file, setFile] = useState<File | null>(null);
 
 
-  const dispatch = useDispatch();
-  const currentUser = useSelector((state: RootState) => state.auth.user);
 
   const createPostHandler = async (e: React.FormEvent) => {
     e.preventDefault();

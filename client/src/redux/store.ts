@@ -2,6 +2,8 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import authReducer from './slices/authSlice.ts';
 import postsReducer from './slices/allPostSlice.ts';
+import suggestedUsersReducer from './slices/suggestedUsersSlice.ts';
+
 import {
   persistStore,
   persistReducer,
@@ -27,6 +29,7 @@ const persistConfig: PersistConfig<RootState> = {
 const rootReducer = combineReducers({
   auth: authReducer,
   posts: postsReducer,
+  suggestedUsers: suggestedUsersReducer,
 });
 
 // Persisted reducer
