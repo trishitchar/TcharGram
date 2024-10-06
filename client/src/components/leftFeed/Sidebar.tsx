@@ -18,6 +18,8 @@ import CreatePost from "./CreatePost";
 import { GiMoebiusTriangle } from "react-icons/gi";
 import { removeAllPosts } from "@/redux/slices/allPostSlice";
 import { removeSuggestedUsers } from "@/redux/slices/suggestedUsersSlice";
+import { clearSocket } from "@/redux/slices/socketSlice";
+import { removeOnlineUsers } from "@/redux/slices/chatSlice";
 
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
@@ -60,6 +62,8 @@ const Sidebar: React.FC = () => {
         dispatch(logout());
         dispatch(removeAllPosts());
         dispatch(removeSuggestedUsers());
+        dispatch(clearSocket())
+        dispatch(removeOnlineUsers())
         navigate('/login');
         console.log('Successfully logged out');
       } else {

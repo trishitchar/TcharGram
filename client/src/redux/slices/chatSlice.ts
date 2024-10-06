@@ -14,9 +14,12 @@ const chatSlice = createSlice({
   reducers: {
     setOnlineUsers: (state, action: PayloadAction<string[]>) => {
       state.onlineUsers = action.payload;
+    },
+    removeOnlineUsers: (state) => {
+        state.onlineUsers = [];
     }
   }
 });
 
-export const { setOnlineUsers } = chatSlice.actions;
+export const { setOnlineUsers, removeOnlineUsers} = chatSlice.actions;
 export default chatSlice.reducer;

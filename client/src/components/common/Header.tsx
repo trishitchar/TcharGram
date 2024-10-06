@@ -10,6 +10,8 @@ import { Menu, X } from 'lucide-react';
 import toast from "react-hot-toast";
 import { removeAllPosts } from "@/redux/slices/allPostSlice";
 import { removeSuggestedUsers } from "@/redux/slices/suggestedUsersSlice";
+import { clearSocket } from "@/redux/slices/socketSlice";
+import { removeOnlineUsers } from "@/redux/slices/chatSlice";
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -47,6 +49,8 @@ const Header: React.FC = () => {
         dispatch(logout());
         dispatch(removeAllPosts());
         dispatch(removeSuggestedUsers());
+        dispatch(clearSocket())
+        dispatch(removeOnlineUsers())
         navigate("/login");
         toast.success('logout done');
         console.log("Successfully logged out");
