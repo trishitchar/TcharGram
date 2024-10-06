@@ -1,12 +1,13 @@
 import LeftChat from '@/components/chatting/LeftChat';
 import RightChat from '@/components/chatting/RightChat';
 import React, { useState } from 'react';
+import {  User as UserType } from '@/data/interface.data';
 
 const Chat: React.FC = () => {
-  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [selectedUser, setSelectedUser] = useState<UserType | null>(null); // Properly typed
   const [conversations, setConversations] = useState<{ [key: string]: string[] }>({});
 
-  const handleUserSelect = (user: any) => {
+  const handleUserSelect = (user: UserType) => {
     setSelectedUser(user);
     if (!conversations[user._id]) {
       setConversations({ ...conversations, [user._id]: [] });

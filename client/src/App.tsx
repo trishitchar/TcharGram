@@ -16,7 +16,6 @@ import { RootState } from './redux/store';
 import { baseURL } from './data/data';
 import { setSocket, clearSocket } from './redux/slices/socketSlice';
 import { setOnlineUsers } from './redux/slices/chatSlice';
-import { User } from './data/interface.data';
 
 const ProtectedRoute: React.FC<{ element: React.ReactElement }> = ({ element }) => {
   const { isAuthenticated } = useAuth();
@@ -44,7 +43,7 @@ const App: React.FC = () => {
       dispatch(setSocket(socketRef.current));
 
       // Handle receiving the list of online users
-      socketRef.current.on('onlineUsers', (onlineUsers: User[]) => {
+      socketRef.current.on('onlineUsers', (onlineUsers: string[]) => {
         dispatch(setOnlineUsers(onlineUsers));
       });
       

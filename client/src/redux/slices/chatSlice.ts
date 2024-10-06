@@ -1,8 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { User } from '@/data/interface.data';
 
 interface ChatState {
-  onlineUsers: User[]; // Store full User objects
+  onlineUsers: string[]; // Store user IDs as strings
 }
 
 const initialState: ChatState = {
@@ -13,7 +12,7 @@ const chatSlice = createSlice({
   name: 'chat',
   initialState,
   reducers: {
-    setOnlineUsers: (state, action: PayloadAction<User[]>) => {
+    setOnlineUsers: (state, action: PayloadAction<string[]>) => {
       state.onlineUsers = action.payload;
     }
   }

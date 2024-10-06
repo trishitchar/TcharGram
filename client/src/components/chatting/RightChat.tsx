@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { User, Send } from 'lucide-react';
+import { User as UserIcon, Send } from 'lucide-react';
+import {  User as UserType } from '@/data/interface.data';
 
 interface RightChatProps {
-  selectedUser: any;
+  selectedUser: UserType | null;
   conversations: { [key: string]: string[] };
   onSendMessage: (message: string) => void;
 }
@@ -32,7 +33,7 @@ const RightChat: React.FC<RightChatProps> = ({ selectedUser, conversations, onSe
               />
             ) : (
               <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center mr-3">
-                <User className="text-gray-500" size={20} />
+                <UserIcon className="text-gray-500" size={20} />
               </div>
             )}
             <div>
@@ -74,7 +75,7 @@ const RightChat: React.FC<RightChatProps> = ({ selectedUser, conversations, onSe
         </>
       ) : (
         <div className="flex flex-col items-center justify-center h-full bg-white">
-          <User className="text-gray-300" size={64} />
+          <UserIcon className="text-gray-300" size={64} />
           <p className="mt-4 text-xl text-gray-500">Select a user to start chatting</p>
         </div>
       )}
