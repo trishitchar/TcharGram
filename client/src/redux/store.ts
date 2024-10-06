@@ -3,6 +3,8 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import authReducer from './slices/authSlice.ts';
 import postsReducer from './slices/allPostSlice.ts';
 import suggestedUsersReducer from './slices/suggestedUsersSlice.ts';
+import socketReducer from './slices/socketSlice.ts';
+import chatReducer from './slices/chatSlice.ts';
 
 import {
   persistStore,
@@ -30,6 +32,8 @@ const rootReducer = combineReducers({
   auth: authReducer,
   posts: postsReducer,
   suggestedUsers: suggestedUsersReducer,
+  socket: socketReducer,
+  chat: chatReducer,
 });
 
 // Persisted reducer

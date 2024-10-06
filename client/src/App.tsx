@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '@/middleware/auth';
 import Login from './pages/Login';
@@ -10,6 +10,13 @@ import Feed from './pages/Feed';
 import ExplorePeoplePage from './components/rightFeed/ExplorePeoplePage';
 import ProtectedLayout from './ProtectedLayout';
 import Chat from './pages/Chat';
+import { io, Socket } from 'socket.io-client';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from './redux/store';
+import { baseURL } from './data/data';
+import { setSocket, clearSocket } from './redux/slices/socketSlice';
+import { setOnlineUsers } from './redux/slices/chatSlice';
+import { User } from './data/interface.data';
 
 const ProtectedRoute: React.FC<{ element: React.ReactElement }> = ({ element }) => {
   const { isAuthenticated } = useAuth();
@@ -22,6 +29,36 @@ const PublicOnlyRoute: React.FC<{ element: React.ReactElement }> = ({ element })
 };
 
 const App: React.FC = () => {
+  const dispatch = useDispatch();
+  const currentUser = useSelector((state: RootState) => state.auth.user);
+  const socketRef = React.useRef<Socket | null>(null);
+
+  useEffect(() => {
+    if (currentUser) {
+      socketRef.current = io(baseURL, {
+        query: {
+          userId: currentUser._id,
+        },
+        transports: ['websocket'],
+      });
+      dispatch(setSocket(socketRef.current));
+
+      // Handle receiving the list of online users
+      socketRef.current.on('onlineUsers', (onlineUsers: User[]) => {
+        dispatch(setOnlineUsers(onlineUsers));
+      });
+      
+
+      // Clean up socket when component is unmounted or user logs out
+      return () => {
+        if (socketRef.current) {
+          socketRef.current.close();
+        }
+        dispatch(clearSocket());
+      };
+    }
+  }, [currentUser, dispatch]);
+
   return (
     <Routes>
       <Route path="/" element={<Landing />} />
