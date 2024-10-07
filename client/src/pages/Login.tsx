@@ -10,7 +10,7 @@ import { useDispatch } from 'react-redux';
 import { setAuthUser } from '@/redux/slices/authSlice';
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState('tc@gg');
+  const [email, setEmail] = useState('testuser@tc');
   const [password, setPassword] = useState('Tchar');
   const [error, setError] = useState('');
   const navigate = useNavigate();

@@ -3,6 +3,7 @@ import Post from './Post';
 import { getAllPosts } from '@/api/post.api';
 import { useDispatch, useSelector } from 'react-redux';
 import { addPosts } from '@/redux/slices/allPostSlice';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { RootState } from '@/redux/store';
 
 const Posts: React.FC = () => {
@@ -21,19 +22,30 @@ const Posts: React.FC = () => {
       try {
         const response = await getAllPosts(page, 10);
         if (response.success && response.posts) {
-          dispatch(addPosts(response.posts));
-          setHasMore(response.posts.length > 0);
+          if (response.posts.length === 0) {
+            setHasMore(false);
+            if (page === 1) {
+              setError('No posts available.');
+            }
+          } else {
+            dispatch(addPosts(response.posts));
+          }
         } else {
-          setError('Failed to fetch posts: ' + (response.message || 'Unknown error'));
-          setHasMore(false);
+          throw new Error(response.message || 'Unknown error');
         }
       } catch (error) {
         if (error instanceof Error) {
-          setError('An error occurred: ' + error.message);
+          if (error.message.includes('404')) {
+            setHasMore(false);
+            if (page === 1) {
+              setError('No posts available.');
+            }
+          } else {
+            setError('Mmaybe You all cought up ' + error.message);
+          }
         } else {
           setError('An unexpected error occurred.');
         }
-        setHasMore(false);
       } finally {
         setLoading(false);
       }
@@ -50,22 +62,17 @@ const Posts: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4">
-      {/* if any error show the error on top of the post */}
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
-          <strong className="font-bold">Error: </strong>
-          <span className="block sm:inline">{error}</span>
-        </div>
+        <Alert variant="destructive" className="mb-4">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       )}
-      {/* sending data to its child post components */}
-      {
-        // temp remove
-      // Array.isArray(posts) &&
-       posts.map((post) => (
+      
+      {posts.map((post) => (
         <Post key={post._id} post={post} />
       ))}
-      {/* loadmore component */}
-      {hasMore && (
+      
+      {hasMore ? (
         <button
           onClick={loadMorePosts}
           disabled={loading}
@@ -73,6 +80,8 @@ const Posts: React.FC = () => {
         >
           {loading ? 'Loading...' : 'Load More'}
         </button>
+      ) : posts.length > 0 && (
+        <p className="text-center text-gray-600 mt-4">No more posts to load.</p>
       )}
     </div>
   );
