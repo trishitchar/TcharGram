@@ -4,3 +4,5 @@ export const baseURL = "https://social-media-422a.onrender.com";
 export const userBaseURL = `${baseURL}/api/user`;
 
 export const postBaseURL = `${baseURL}/api/post`
+
+export const msgBaseURL = `${baseURL}/api/message`

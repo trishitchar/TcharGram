@@ -1,11 +1,22 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+interface Message {
+  _id: string;
+  senderId: string;
+  receiverId: string;
+  message: string;
+  isRead: boolean;
+  createdAt: string;
+}
+
 interface ChatState {
-  onlineUsers: string[]; // Store user IDs as strings
+  onlineUsers: string[];
+  messages: { [key: string]: Message[] };
 }
 
 const initialState: ChatState = {
   onlineUsers: [],
+  messages: {},
 };
 
 const chatSlice = createSlice({
@@ -15,11 +26,22 @@ const chatSlice = createSlice({
     setOnlineUsers: (state, action: PayloadAction<string[]>) => {
       state.onlineUsers = action.payload;
     },
-    removeOnlineUsers: (state) => {
-        state.onlineUsers = [];
-    }
-  }
+    setMessages: (state, action: PayloadAction<{ userId: string; messages: Message[] }>) => {
+      state.messages[action.payload.userId] = action.payload.messages;
+    },
+    addMessage: (state, action: PayloadAction<{ userId: string; message: Message }>) => {
+      if (state.messages[action.payload.userId]) {
+        state.messages[action.payload.userId].push(action.payload.message);
+      } else {
+        state.messages[action.payload.userId] = [action.payload.message];
+      }
+    },
+    clearChat: (state) => {
+      state.onlineUsers = [];
+      state.messages = {};
+    },
+  },
 });
 
-export const { setOnlineUsers, removeOnlineUsers} = chatSlice.actions;
+export const { setOnlineUsers, setMessages, addMessage, clearChat } = chatSlice.actions;
 export default chatSlice.reducer;

@@ -49,8 +49,7 @@ export const getMessage = async (req, res) => {
         const receiverId = req.params.id;
         const conversation = await Conversation.findOne({
             participants: { $all: [senderId, receiverId] },
-        }).populate('messages'); // Populate the messages field with message details
-        // If no conversation exists, return an empty array of messages
+        }).populate('messages');
         if (!conversation) {
             return res.status(200).json({ success: true, messages: [] });
         }

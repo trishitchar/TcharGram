@@ -25,7 +25,7 @@ async function authFetch(endpoint: string, options: RequestInit = {}): Promise<R
     }
   
     return response;
-  }
+}
 
 export async function getProfile(userId:string) {
     // alert(userId);
