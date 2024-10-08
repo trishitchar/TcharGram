@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getProfile } from '@/api/user.api';
 // import { getAllPosts } from '@/api/post.api';
-import { getCurrentUserPost } from '@/api/post.api';
+// import { getAllPosts } from '@/api/post.api';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import { User, PostType } from '@/data/interface.data';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import { getAllPosts } from '@/api/post.api';
 
 const Profile: React.FC = () => {
   const currentUser = useSelector((state: RootState) => state.auth.user);
@@ -25,9 +26,9 @@ const Profile: React.FC = () => {
 
         // eita emon kora jete pare like if user set private profile then getprofile will call otherwise for public profile getAllpost
         // public profile
-        // const allPosts = await getAllPosts();
+        const allPosts = await getAllPosts();
         // private profile 
-        const allPosts = await getCurrentUserPost();
+        // const allPosts = await getCurrentUserPost();
 
         if (response.success && allPosts.success) {
           setUser(response.user);
