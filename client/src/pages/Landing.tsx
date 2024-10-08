@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import Header from '@/components/common/Header';
 import { MessageCircle, Video, Zap, Globe, Code, ShoppingBag } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const FeatureItem: React.FC<{ icon: React.ReactNode; title: string; description: string }> = ({ icon, title, description }) => (
   <motion.div 
@@ -35,7 +36,9 @@ const Landing: React.FC = () => {
               Connect, collaborate, and create like never before with our cutting-edge platform.
             </p>
             <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3 px-8 rounded-full text-lg transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-              Get Started Now
+              <Link to={'/login'}>
+                Get Started Now
+              </Link>
             </Button>
           </motion.div>
 
@@ -84,7 +87,9 @@ const Landing: React.FC = () => {
             </p>
             <div className="flex justify-center">
               <Button className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-semibold py-3 px-8 rounded-full transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                Join Now
+                <Link to={'/register'}>
+                  Join Now
+                </Link>
               </Button>
             </div>
           </motion.div>
