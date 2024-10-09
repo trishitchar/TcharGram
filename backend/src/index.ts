@@ -14,10 +14,11 @@ import { app, server } from './socketio/socketio.js';
 dotenv.config();
 
 // MIDDLEWARE
-app.use(express.json());
-app.use(cookieParser());
-app.use(urlencoded({extended:true}));
+app.use(express.json()); //for parse the json data, coming from frontend
+app.use(cookieParser()); //for parsing cookies
+app.use(urlencoded({extended:true})); // for parse differnt types of url
 
+// replace with your frontend urls
 const corsAllowOrigin = {
   origin: ['http://localhost:5173', 'https://tchargram.vercel.app', 'https://social-media-tchar.onrender.com'],
   credentials: true

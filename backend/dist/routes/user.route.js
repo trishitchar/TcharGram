@@ -11,9 +11,9 @@ router.route('/profile/:id').get(isTokenValid, getProfile);
 router.post('/profile/edit/:id', isTokenValid, upload.single('profilePicture'), editProfile);
 router.route('/suggested').get(isTokenValid, getSuggestedUsers);
 router.route('/followorunfollow/:id').post(isTokenValid, followOrUnfollow);
-// test route
-router.route('/test').post(isTokenValid, login);
-router.route('/testprofile/:id').get(getProfile);
-router.route('/testsuggested').get(getSuggestedUsers);
-router.route('/testfolloworunfollow/:id').post(followOrUnfollow);
+// test route without authentication
+// router.route('/test').post(isTokenValid,login);
+// router.route('/testprofile/:id').get(getProfile);
+// router.route('/testsuggested').get(getSuggestedUsers);
+// router.route('/testfolloworunfollow/:id').post(followOrUnfollow);
 export default router;

@@ -8,7 +8,7 @@ export const useAuth = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const isAuthenticated = !!token;
+  const isAuthenticated = !!token; //??
 
   useEffect(() => {
     const publicRoutes = ['/', '/login', '/register'];

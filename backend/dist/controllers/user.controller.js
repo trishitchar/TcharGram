@@ -85,7 +85,7 @@ export const login = async (req, res) => {
             httpOnly: true, // Prevents client-side JavaScript from accessing the cookie
             secure: true, // Ensures the cookie is sent over HTTPS only
             sameSite: 'none', // Cookie is sent only for same-site requests
-            maxAge: 24 * 60 * 60 * 1000, // 1 day expiration time
+            maxAge: 15 * 24 * 60 * 60 * 1000, // 15 day expiration time
             path: '/', // Ensure cookie is available on all pages
         });
         return res.status(200).json({
