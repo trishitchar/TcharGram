@@ -38,7 +38,7 @@ export interface AddCommentResponse {
     success: boolean;
 }
 
-export interface User {
+export interface UserType {
     _id: string;
     username: string;
     email: string;

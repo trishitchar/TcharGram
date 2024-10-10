@@ -1,5 +1,5 @@
 import { allmsg, sendmsg } from "@/api/message.api";
-import { User } from "@/data/interface.data";
+import { UserType } from "@/data/interface.data";
 import { addMessage, setMessages } from "@/redux/slices/chatSlice";
 import { RootState } from "@/redux/store";
 import { Send, UserIcon } from "lucide-react";
@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 interface RightChatProps {
-  selectedUser: User | null;
+  selectedUser: UserType | null;
 }
 
 const RightChat: React.FC<RightChatProps> = ({ selectedUser }) => {

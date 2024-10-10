@@ -1,5 +1,10 @@
 import { userBaseURL } from "@/data/data";
 
+// router.route('/register').post(register);
+// router.route('/login').post(login);
+// router.route('/logout').get(logout);
+// router.post('/profile/edit/:id', isTokenValid, upload.single('profilePicture'), editProfile);
+
 async function authFetch(endpoint: string, options: RequestInit = {}): Promise<Response> {
     const fetchOptions: RequestInit = {
       ...options,
@@ -26,6 +31,23 @@ async function authFetch(endpoint: string, options: RequestInit = {}): Promise<R
   
     return response;
 }
+
+// export async function register(username:string,email: string,password:string) {
+//   try {
+//     const response = await authFetch('/register',{
+//       method: 'POST'
+//     });
+//     if (!response.ok) throw new Error('Failed to REGISTER');
+
+//     const responseData = await response.json();
+//     // console.log("user api responsedata",response);
+//     return responseData;
+
+//   } catch (error) {
+//     console.error('Error in REGISTER:', error);
+//     throw error;
+//   }
+// }
 
 export async function getProfile(userId:string) {
     // alert(userId);

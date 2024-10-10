@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { User as UserIcon } from 'lucide-react';
-import { User as UserType } from '@/data/interface.data';
+import { UserType } from '@/data/interface.data';
 
 interface LeftChatProps {
   onUserSelect: (user: UserType) => void;

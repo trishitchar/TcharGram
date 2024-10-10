@@ -5,7 +5,7 @@ import { getProfile } from '@/api/user.api';
 // import { getAllPosts } from '@/api/post.api';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
-import { User, PostType } from '@/data/interface.data';
+import { UserType, PostType } from '@/data/interface.data';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { getAllPosts } from '@/api/post.api';
@@ -14,7 +14,7 @@ const Profile: React.FC = () => {
   const currentUser = useSelector((state: RootState) => state.auth.user);
 
   const { userId } = useParams<{ userId: string }>();
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserType | null>(null);
   const [posts, setPosts] = useState<PostType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);

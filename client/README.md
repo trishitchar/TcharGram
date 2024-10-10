@@ -20,3 +20,4 @@ client
 1. create all backend functonality in frontend 
 2. gender prefence option in frontend so can give one random userpic or can put random profile pic also np 
 3. nsfw check if possible
+4. nodemailer

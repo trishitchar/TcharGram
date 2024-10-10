@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { User } from '@/data/interface.data';
+import { UserType } from '@/data/interface.data';
 
-export interface ExtendedUser extends User {
+export interface ExtendedUser extends UserType {
   isFollowing?: boolean;
 }
 

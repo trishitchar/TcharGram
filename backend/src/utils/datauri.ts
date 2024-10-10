@@ -1,6 +1,6 @@
 // src/utils/dataUri.util.ts
 
-import path from 'path';
+// import path from 'path';
 
 /**
  * Converts a file buffer to a Data URI

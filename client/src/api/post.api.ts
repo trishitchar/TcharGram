@@ -1,6 +1,11 @@
 import { postBaseURL } from '@/data/data';
 import { AddCommentResponse, ApiResponse } from '@/data/interface.data';
 
+// have to add
+// router.route('/getcommentsOfpost/:id').post(isTokenValid,getCommentsOfPost)
+// router.route('/deletecomment/:id').post(isTokenValid,deleteComment)
+// router.route('/bookmarkpost/:id').post(isTokenValid,bookmarkPost)
+
 // eita sometimes work kore but nicher ta prai same and updated
 // async function authFetch(endpoint: string, options: RequestInit = {}): Promise<Response> {
 //   const fetchOptions: RequestInit = {

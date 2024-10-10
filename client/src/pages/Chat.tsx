@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { User as UserType } from '@/data/interface.data';
+import { UserType } from '@/data/interface.data';
 import { setOnlineUsers, addMessage } from '@/redux/slices/chatSlice';
 import LeftChat from '@/components/chatting/LeftChat';
 import RightChat from '@/components/chatting/RightChat';

@@ -5,9 +5,9 @@ import { followorunfollow } from '@/api/user.api';
 import { RootState, AppDispatch } from '@/redux/store';
 import {updateFollowStatus as updateSuggestedFollowStatus } from '@/redux/slices/suggestedUsersSlice';
 import { updateFollowStatus as updateAuthFollowStatus } from '@/redux/slices/authSlice';
-import { User } from '@/data/interface.data';
+import { UserType } from '@/data/interface.data';
 
-interface ExtendedUser extends User{
+interface ExtendedUser extends UserType{
   isFollowing?: boolean;
 }
 
