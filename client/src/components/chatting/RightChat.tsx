@@ -2,16 +2,17 @@ import { allmsg, sendmsg } from "@/api/message.api";
 import { UserType } from "@/data/interface.data";
 import { addMessage, setMessages } from "@/redux/slices/chatSlice";
 import { RootState } from "@/redux/store";
-import { Send, UserIcon } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { ArrowLeft, Send, UserIcon } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 interface RightChatProps {
   selectedUser: UserType | null;
+  onBack?: () => void;
 }
 
-const RightChat: React.FC<RightChatProps> = ({ selectedUser }) => {
+const RightChat: React.FC<RightChatProps> = ({ selectedUser,onBack }) => {
   const [message, setMessage] = useState('');
   const dispatch = useDispatch();
   const socket = useSelector((state: RootState) => state.socket.socket);
@@ -20,6 +21,14 @@ const RightChat: React.FC<RightChatProps> = ({ selectedUser }) => {
     state.chat.messages[selectedUser?._id || '']
   );
   const onlineUsers = useSelector((state: RootState) => state.chat.onlineUsers);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+  useEffect(() => {
+    scrollToBottom();
+  }, [chatMessages]);
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -56,10 +65,18 @@ const RightChat: React.FC<RightChatProps> = ({ selectedUser }) => {
   };
 
   return (
-    <div className="w-2/3 flex flex-col">
+    <div className="w-full h-full flex flex-col bg-white">
       {selectedUser ? (
         <>
           <div className="bg-white p-4 border-b border-gray-200 flex items-center">
+            {onBack && (
+              <button 
+                onClick={onBack}
+                className="mr-2 p-2 hover:bg-gray-100 rounded-full md:hidden"
+              >
+                <ArrowLeft size={20} />
+              </button>
+            )}
             {selectedUser.profilePicture ? (
               <img
                 src={selectedUser.profilePicture}
@@ -92,6 +109,7 @@ const RightChat: React.FC<RightChatProps> = ({ selectedUser }) => {
                 {msg.message}
               </div>
             ))}
+            <div ref={messagesEndRef} />
           </div>
 
           <div className="bg-white p-4 border-t border-gray-200">

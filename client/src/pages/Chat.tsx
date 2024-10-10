@@ -12,6 +12,17 @@ const Chat: React.FC = () => {
   const socket = useSelector((state: RootState) => state.socket.socket);
   const user = useSelector((state: RootState) => state.auth.user);
 
+  const [isMobileView, setIsMobileView] = useState(window.innerWidth < 768);
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+
   useEffect(() => {
     if (socket && user) {
       // Add user to online users
@@ -51,13 +62,29 @@ const Chat: React.FC = () => {
   const handleUserSelect = (user: UserType) => {
     setSelectedUser(user);
   };
+  
+  const handleBackToUsers = () => {
+    setSelectedUser(null);
+  };
+
 
   return (
     <div className="flex h-screen bg-gray-100 overflow-hidden">
-      <LeftChat onUserSelect={handleUserSelect} />
-      <RightChat selectedUser={selectedUser} />
+      {/* Left Chat - Hidden on mobile when a user is selected */}
+      <div className={`${isMobileView && selectedUser ? 'hidden' : 'w-full md:w-1/3'}`}>
+        <LeftChat onUserSelect={handleUserSelect} />
+      </div>
+      
+      {/* Right Chat - Full width on mobile when a user is selected */}
+      <div className={`${isMobileView ? (selectedUser ? 'w-full' : 'hidden') : 'w-2/3'}`}>
+        <RightChat 
+          selectedUser={selectedUser} 
+          onBack={isMobileView ? handleBackToUsers : undefined}
+        />
+      </div>
     </div>
   );
 };
+
 
 export default Chat;

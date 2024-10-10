@@ -14,8 +14,8 @@ const LeftChat: React.FC<LeftChatProps> = ({ onUserSelect }) => {
   console.log("online users: ", onlineUsers);
 
   return (
-    <div className="w-1/3 bg-white border-r border-gray-200 flex flex-col">
-      <h1 className="text-xl font-semibold p-6 border-b border-gray-200">Suggested Users</h1>
+    <div className="w-full h-full bg-white border-r border-gray-200 flex flex-col">
+      <h1 className="text-xl font-semibold p-4 md:p-6 border-b border-gray-200">Messages</h1>
       <div className="flex-grow overflow-y-auto">
         {loading && <p className="p-4 text-center">Loading...</p>}
         {error && <p className="p-4 text-center text-red-500">Error: {error}</p>}
@@ -42,17 +42,15 @@ const LeftChat: React.FC<LeftChatProps> = ({ onUserSelect }) => {
                   <p className="font-medium">{user.username}</p>
                   {user.bio && <p className="text-sm text-gray-500 truncate">{user.bio}</p>}
                 </div>
-                {onlineUsers.includes(user._id) ? (
-                  <div className="text-green-500 font-bold">online</div>
-                ) : (
-                  <div className="text-red-500 font-bold">offline</div>
-                )}
+                <div className={`${onlineUsers.includes(user._id) ? 'text-green-500' : 'text-red-500'} font-bold`}>
+                  {onlineUsers.includes(user._id) ? 'online' : 'offline'}
+                </div>
               </div>
             </div>
           ))
         ) : (
           <div className="text-center py-8">
-            <p className="text-gray-500">No suggested users found.</p>
+            <p className="text-gray-500">No messages yet.</p>
           </div>
         )}
       </div>
