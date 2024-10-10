@@ -8,7 +8,8 @@ const ProtectedLayout: React.FC = () => {
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Desktop Sidebar - hidden on mobile */}
-      <div className="hidden md:flex">
+      {/* <div className="hidden md:flex"> */}
+      <div className="hidden md:block">
         <Sidebar />
       </div>
       
