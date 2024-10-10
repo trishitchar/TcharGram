@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { Button } from "../ui/button";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { userBaseURL } from "@/data/data";
 import { useDispatch } from "react-redux";
-import { logout } from "@/redux/slices/authSlice";
+import { logout as logoutSlice} from "@/redux/slices/authSlice";
+import { logout as logoutApi} from '@/api/user.api';
 import { decodeToken } from "@/middleware/DecodedToken";
 import { Menu, X } from 'lucide-react';
 import toast from "react-hot-toast";
@@ -41,19 +40,19 @@ const Header: React.FC = () => {
 
   const logOutHandler = async () => {
     try {
-      const response = await axios.get(`${userBaseURL}/logout`, { withCredentials: true });
+      const response = await logoutApi();
 
-      if (response.status === 200 || response.data.success) {
+      if (response.status === 200 || response.success) {
         localStorage.removeItem("token");
         document.cookie = "token=; Max-Age=0";
-        dispatch(logout());
+        dispatch(logoutSlice());
         dispatch(removeAllPosts());
         dispatch(removeSuggestedUsers());
         dispatch(clearSocket())
         dispatch(clearChat())
         navigate("/login");
         toast.success('logout done');
-        console.log("Successfully logged out");
+        // console.log("Successfully logged out");
       } else {
         console.error("Logout failed:", response.data.message);
       }

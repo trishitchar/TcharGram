@@ -1,13 +1,12 @@
 import React, { useState, FormEvent, ChangeEvent } from 'react';
-import axios from 'axios';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/common/Header';
-import { userBaseURL } from '@/data/data';
 import { useDispatch } from 'react-redux';
 import { setAuthUser } from '@/redux/slices/authSlice';
+import { login } from '@/api/user.api';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('testuser@tc');
@@ -21,20 +20,11 @@ const Login: React.FC = () => {
     setError('');
 
     try {
-      const response = await axios.post(
-        `${userBaseURL}/login`,
-        { email, password },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          withCredentials: true,
-        }
-      );
+      const response = await login(email,password);
 
-      if (response.data.success) {
-        toast.success(response.data.message);
-        const { token, user } = response.data;
+      if (response.success) {
+        toast.success(response.message);
+        const { token, user } = response;
         dispatch(setAuthUser(user))
         localStorage.setItem('token', token);
         navigate('/feed');

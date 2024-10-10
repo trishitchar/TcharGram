@@ -1,8 +1,5 @@
 import { userBaseURL } from "@/data/data";
 
-// router.route('/register').post(register);
-// router.route('/login').post(login);
-// router.route('/logout').get(logout);
 // router.post('/profile/edit/:id', isTokenValid, upload.single('profilePicture'), editProfile);
 
 async function authFetch(endpoint: string, options: RequestInit = {}): Promise<Response> {
@@ -32,22 +29,57 @@ async function authFetch(endpoint: string, options: RequestInit = {}): Promise<R
     return response;
 }
 
-// export async function register(username:string,email: string,password:string) {
-//   try {
-//     const response = await authFetch('/register',{
-//       method: 'POST'
-//     });
-//     if (!response.ok) throw new Error('Failed to REGISTER');
+export async function register(username:string,email: string,password:string) {
+  try {
+    const response = await authFetch('/register',{
+      method: 'POST',
+      body: JSON.stringify({ username, email, password }),
+    });
 
-//     const responseData = await response.json();
-//     // console.log("user api responsedata",response);
-//     return responseData;
+    if (!response.ok) throw new Error('Failed to REGISTER');
 
-//   } catch (error) {
-//     console.error('Error in REGISTER:', error);
-//     throw error;
-//   }
-// }
+    const responseData = await response.json();
+    // console.log("user api responsedata",response);
+    return responseData;
+
+  } catch (error) {
+    console.error('Error in REGISTER:', error);
+    throw error;
+  }
+}
+
+export async function login(email:string,password: string) {
+  try {
+    const response = await authFetch('/login',{
+      method: 'POST',
+      body: JSON.stringify({email,password}),
+    });
+    if (!response.ok) throw new Error('Failed to LOGIN');
+
+    const responseData = await response.json();
+    // console.log("user api responsedata",response);
+    return responseData;
+  } catch (error) {
+    console.error('Error in LOGIN:', error);
+    throw error;
+    
+  }
+}
+
+export async function logout() {
+  try {
+    const response = await authFetch('/logout',{
+      method: 'GET',
+    })
+    if (!response.ok) throw new Error('Failed to LOGOUT');
+    const responseData = await response.json();
+    // console.log("user api responsedata",response);
+    return responseData;
+  } catch (error) {
+    console.error('Error in LOGOUT:', error);
+    throw error;
+  }
+}
 
 export async function getProfile(userId:string) {
     // alert(userId);

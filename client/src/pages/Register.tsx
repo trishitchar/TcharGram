@@ -1,11 +1,10 @@
 import React, { useState, FormEvent, ChangeEvent } from 'react';
-import axios from 'axios';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/common/Header';
-import { userBaseURL } from '@/data/data';
+import { register } from '@/api/user.api';
 
 const Register: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -24,19 +23,10 @@ const Register: React.FC = () => {
     }
 
     try {
-      const response = await axios.post(
-        `${userBaseURL}/register`,
-        { username, email, password },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          withCredentials: true,
-        }
-      );
+      const response = await register(username,email,password);
 
-      if (response.data.success) {
-        toast.success(response.data.message);
+      if (response.success) {
+        toast.success(response.message);
         navigate('/login');
       }
     } catch (error: any) {

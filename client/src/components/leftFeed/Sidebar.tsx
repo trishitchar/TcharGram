@@ -10,16 +10,16 @@ import { FaRegHeart } from "react-icons/fa";
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { userBaseURL } from '@/data/data';
 import { RootState } from "@/redux/store"; 
-import { logout } from "@/redux/slices/authSlice";
+import { logout as logoutSlice } from "@/redux/slices/authSlice";
 import CreatePost from "./CreatePost";
 import { GiMoebiusTriangle } from "react-icons/gi";
 import { removeAllPosts } from "@/redux/slices/allPostSlice";
 import { removeSuggestedUsers } from "@/redux/slices/suggestedUsersSlice";
 import { clearSocket } from "@/redux/slices/socketSlice";
 import { clearChat } from "@/redux/slices/chatSlice";
+import { logout as logoutApi} from '@/api/user.api';
+import toast from "react-hot-toast";
 
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
@@ -54,18 +54,18 @@ const Sidebar: React.FC = () => {
 
   const logOutHandler = async () => {
     try {
-      const response = await axios.get(`${userBaseURL}/logout`, { withCredentials: true });
+      const response = await logoutApi();
 
-      if (response.status === 200 || response.data.success) {
+      if (response.status === 200 || response.success) {
         localStorage.removeItem('token'); 
         document.cookie = 'token=; Max-Age=0';
-        dispatch(logout());
+        dispatch(logoutSlice());
         dispatch(removeAllPosts());
         dispatch(removeSuggestedUsers());
         dispatch(clearSocket())
         dispatch(clearChat())
         navigate('/login');
-        console.log('Successfully logged out');
+        toast.success('Successfully logged out');
       } else {
         console.error('Logout failed:', response.data.message);
       }
