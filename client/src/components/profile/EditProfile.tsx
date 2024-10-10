@@ -69,7 +69,7 @@ const EditProfile: React.FC<EditProfileProps> = ({ open, setOpen }) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent aria-describedby='' className="sm:max-w-[425px]">
+      <DialogContent aria-describedby='' className="sm:max-w-[425px] max-w-[90%] mx-auto p-4 rounded-md">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">Edit Profile</DialogTitle>
         </DialogHeader>
