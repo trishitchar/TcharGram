@@ -152,7 +152,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
               <HiDotsHorizontal />
             </span>
           </DialogTrigger>
-          <DialogContent aria-describedby='' className="sm:max-w-[425px]">
+          <DialogContent aria-describedby='' className="sm:max-w-[425px] max-w-[90%] mx-auto p-4">
             <DialogTitle className="sr-only">Post Options</DialogTitle>
             <div className="flex flex-col w-full gap-2">
               {currentUser && (
@@ -169,7 +169,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
                     variant="ghost" 
                     className="w-full py-6 text-base font-semibold hover:bg-gray-100"
                   >
-                    Add to favorites
+                    Add to Bookmark
                   </Button>
                   {currentUser._id === post.author?._id && (
                     <Button 

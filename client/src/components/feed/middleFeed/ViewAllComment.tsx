@@ -38,7 +38,7 @@ const ViewAllComment: React.FC<ViewAllCommentProps> = ({
 
   return (
     <Dialog open={openComponent === 'commentsDialog'} onOpenChange={() => handleDialogOpen('none')}>
-      <DialogContent className="max-w-[95vw] md:max-w-[80vw] w-full h-[90vh] p-0 flex flex-col md:flex-row">
+      <DialogContent className="max-w-[90vw] md:max-w-[80vw] w-full h-[90vh] p-0 flex flex-col md:flex-row rounded-md">
         <DialogTitle className="sr-only">View All Comments</DialogTitle>
 
         {/* Mobile Layout */}
