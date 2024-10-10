@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getProfile } from '@/api/user.api';
-// import { getAllPosts } from '@/api/post.api';
-// import { getAllPosts } from '@/api/post.api';
+// import { getCurrentUserPost } from '@/api/post.api';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import { UserType, PostType } from '@/data/interface.data';
@@ -68,8 +67,13 @@ const Profile: React.FC = () => {
     <div className="p-8">
       <div className="max-w-3xl mx-auto">
         <div className="flex flex-col md:flex-row items-center mb-8">
+          {/* facing some problem here, 
+            1. if I show the photo after fetching (user?.profilePicture) then after updating phto is's showing the previous photo
+            2. if I show the phot after dispatching (currentUser?.profilePicture) then after opeing someone other's profile it's showing current user photo still 
+)
+          */}
           <img
-            src={currentUser?.profilePicture || "https://via.placeholder.com/150"}
+            src={user?.profilePicture || "https://via.placeholder.com/150"}
             alt={user.username}
             className="w-32 h-32 rounded-full object-cover mb-4 md:mb-0 md:mr-8"
           />
@@ -80,7 +84,7 @@ const Profile: React.FC = () => {
               <span><strong>{user.followers.length}</strong> followers</span>
               <span><strong>{user.following.length}</strong> following</span>
             </div>
-            <p className="mb-2">{currentUser?.bio}</p>
+            <p className="mb-2">{user?.bio}</p>
             {
               (currentUser?._id === userId) && <Button onClick={handleEditProfile} variant="outline">Edit Profile</Button>
             }
