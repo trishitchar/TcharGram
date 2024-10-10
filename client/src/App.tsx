@@ -7,7 +7,7 @@ import Register from './pages/Register';
 import Profile from './pages/Profile';
 import NotFound from './pages/NotFound';
 import Feed from './pages/Feed';
-import ExplorePeoplePage from './components/rightFeed/ExplorePeoplePage';
+import ExplorePeoplePage from './components/feed/rightFeed/ExplorePeoplePage';
 import ProtectedLayout from './ProtectedLayout';
 import Chat from './pages/Chat';
 import { io, Socket } from 'socket.io-client';

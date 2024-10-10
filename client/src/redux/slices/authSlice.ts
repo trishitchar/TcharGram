@@ -31,8 +31,11 @@ const authSlice = createSlice({
         }
       }
     },
+    updateProfile: (state, action: PayloadAction<UserType>) => {
+      state.user = action.payload;
+    },
   },
 });
 
-export const { setAuthUser, logout, updateFollowStatus } = authSlice.actions;
+export const { setAuthUser, logout, updateFollowStatus, updateProfile } = authSlice.actions;
 export default authSlice.reducer;

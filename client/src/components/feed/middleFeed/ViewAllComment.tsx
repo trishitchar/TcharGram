@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '../../ui/dialog';
 import { CommentType, PostType } from '@/data/interface.data';
 
 

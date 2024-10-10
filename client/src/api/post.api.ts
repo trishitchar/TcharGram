@@ -57,8 +57,10 @@ export async function addpost(formData: FormData): Promise<any> {
     }
 
     // console.log('post api',response)
+    const responseData = await response.json();
+    return responseData;
 
-    return await response.json();
+    // return await response.json();
   } catch (error) {
     console.error('Error creating post:', error);
     throw error;

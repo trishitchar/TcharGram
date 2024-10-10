@@ -171,17 +171,17 @@ interface AuthenticatedRequest extends Request {
 export const editProfile = async (req: AuthenticatedRequest, res: Response): Promise<Response> => {
     try {
       const currentUserId = req.userId; 
-      const userId = req.params.id; 
+      // const userId = req.params.id; 
       const { bio, gender } = req.body;
       const profilePicture = req.file;
   
       // Check if the current user is trying to edit their own profile
-      if (currentUserId !== userId) {
-        return res.status(403).json({
-          message: 'You are not authorized to edit this profile.',
-          success: false,
-        });
-      }
+      // if (currentUserId !== userId) {
+      //   return res.status(403).json({
+      //     message: 'You are not authorized to edit this profile.',
+      //     success: false,
+      //   });
+      // }
   
       let cloudResponse;
   
@@ -197,7 +197,7 @@ export const editProfile = async (req: AuthenticatedRequest, res: Response): Pro
       }
   
       // Fetch the user by their ID and exclude the password field
-      const user = await User.findById(userId).select('-password');
+      const user = await User.findById(currentUserId).select('-password');
   
       // If the user does not exist, return a 404 error
       if (!user) {

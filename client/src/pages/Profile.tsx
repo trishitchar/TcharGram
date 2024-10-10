@@ -9,9 +9,11 @@ import { UserType, PostType } from '@/data/interface.data';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { getAllPosts } from '@/api/post.api';
+import EditProfile from '@/components/profile/EditProfile';
 
 const Profile: React.FC = () => {
   const currentUser = useSelector((state: RootState) => state.auth.user);
+  const [open, setOpen] = React.useState(false);
 
   const { userId } = useParams<{ userId: string }>();
   const [user, setUser] = useState<UserType | null>(null);
@@ -58,12 +60,16 @@ const Profile: React.FC = () => {
     return <div className="text-red-500 text-center mt-8">{error || 'User not found'}</div>;
   }
 
+  const handleEditProfile = async () => {
+    setOpen(true)
+  }
+
   return (
     <div className="p-8">
       <div className="max-w-3xl mx-auto">
         <div className="flex flex-col md:flex-row items-center mb-8">
           <img
-            src={user.profilePicture || "https://via.placeholder.com/150"}
+            src={currentUser?.profilePicture || "https://via.placeholder.com/150"}
             alt={user.username}
             className="w-32 h-32 rounded-full object-cover mb-4 md:mb-0 md:mr-8"
           />
@@ -74,11 +80,12 @@ const Profile: React.FC = () => {
               <span><strong>{user.followers.length}</strong> followers</span>
               <span><strong>{user.following.length}</strong> following</span>
             </div>
-            <p className="mb-2">{user.bio}</p>
+            <p className="mb-2">{currentUser?.bio}</p>
             {
-              (currentUser?._id === userId) && <Button variant="outline">Edit Profile</Button>
+              (currentUser?._id === userId) && <Button onClick={handleEditProfile} variant="outline">Edit Profile</Button>
             }
           </div>
+          <EditProfile open={open} setOpen={setOpen} />
         </div>
 
         {/* Post Grid */}

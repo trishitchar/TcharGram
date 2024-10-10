@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import Sidebar from '@/components/leftFeed/Sidebar';
+import Sidebar from '@/components/feed/leftFeed/Sidebar';
 
 const ProtectedLayout: React.FC = () => {
   return (

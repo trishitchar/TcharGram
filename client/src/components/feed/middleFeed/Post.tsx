@@ -2,7 +2,7 @@
 // one idea is currentUserPost acts like insta private id you can't see other's post
 // but getAllPosts can see all user post kinda like public profile
 import React, { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '../ui/dialog';
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '../../ui/dialog';
 import { HiDotsHorizontal } from "react-icons/hi";
 import ViewAllComment from './ViewAllComment';
 import {deletePost, likePost, dislikePost, addCommentt } from '@/api/post.api';
@@ -13,7 +13,7 @@ import { addComment, removePost, setPosts } from '@/redux/slices/allPostSlice';
 import { FaHeart, FaRegHeart, FaRegComment, FaRegShareSquare } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import { CommentType, PostType } from '@/data/interface.data';
-import { Button } from '../ui/button';
+import { Button } from '../../ui/button';
 
 interface PostProps {
   post: PostType;

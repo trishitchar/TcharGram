@@ -128,3 +128,23 @@ export async function followorunfollow(targetUserId:string) {
     throw error;
   }
 }
+
+export async function editProfileAPI(formData: FormData): Promise<any> {
+  try {
+    const response = await authFetch('/profile/edit', {
+      method: 'POST',
+      body: formData,
+    });
+    console.log("formdata",formData)
+
+    if (!response.ok) {
+      throw new Error('Failed to edit profile');
+    }
+
+    const responseData = await response.json();
+    return responseData;
+  } catch (error) {
+    console.error('Error editing profile:', error);
+    throw error;
+  }
+}

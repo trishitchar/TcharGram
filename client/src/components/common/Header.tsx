@@ -41,7 +41,6 @@ const Header: React.FC = () => {
   const logOutHandler = async () => {
     try {
       const response = await logoutApi();
-
       if (response.status === 200 || response.success) {
         localStorage.removeItem("token");
         document.cookie = "token=; Max-Age=0";
@@ -52,7 +51,6 @@ const Header: React.FC = () => {
         dispatch(clearChat())
         navigate("/login");
         toast.success('logout done');
-        // console.log("Successfully logged out");
       } else {
         console.error("Logout failed:", response.data.message);
       }
@@ -63,28 +61,36 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="bg-gradient-to-r from-gray-900 to-purple-900 text-white shadow-md">
-      <div className="container mx-auto px-4">
+    <header className="bg-gradient-to-r from-gray-900 to-purple-900 text-white shadow-md relative overflow-hidden">
+      {/* Add a subtle animated background */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(120,0,255,0.1)_0%,transparent_70%)] animate-pulse"></div>
+      
+      <div className="container mx-auto px-4 relative z-10">
         <div className="flex justify-between items-center py-4">
           <div className="flex items-center">
-            <button onClick={goToHome}>
-              <div className="mr-3">
-                <img src="./logo.svg" alt="Logo" className="h-10 w-45" />
+            <button onClick={goToHome} className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-pink-600 to-purple-600 rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+              <div className="relative">
+                <img 
+                  src="./logo.svg" 
+                  alt="Logo" 
+                  className="h-10 w-45 drop-shadow-[0_0_8px_rgba(255,255,255,0.8)] transition-all duration-300 group-hover:drop-shadow-[0_0_12px_rgba(255,255,255,1)]"
+                />
               </div>
             </button>
-            {/* <div className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">TcharGram</div> */}
           </div>
+          
           <nav className="hidden md:flex space-x-4">
             {!userId ? (
               <>
                 <Button
-                  className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full transition duration-300"
+                  className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full transition duration-300 shadow-[0_0_15px_rgba(59,130,246,0.5)]"
                   onClick={handleLoginClick}
                 >
                   Login
                 </Button>
                 <Button
-                  className="bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2 px-4 rounded-full transition duration-300"
+                  className="bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2 px-4 rounded-full transition duration-300 shadow-[0_0_15px_rgba(147,51,234,0.5)]"
                   onClick={handleSignUpClick}
                 >
                   Sign Up
@@ -93,13 +99,13 @@ const Header: React.FC = () => {
             ) : (
               <>
                 <Button
-                  className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full transition duration-300"
+                  className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full transition duration-300 shadow-[0_0_15px_rgba(59,130,246,0.5)]"
                   onClick={handleFeedClick}
                 >
                   Feed
                 </Button>
                 <Button
-                  className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-full transition duration-300"
+                  className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-full transition duration-300 shadow-[0_0_15px_rgba(239,68,68,0.5)]"
                   onClick={logOutHandler}
                 >
                   Logout
@@ -107,6 +113,7 @@ const Header: React.FC = () => {
               </>
             )}
           </nav>
+          
           <div className="md:hidden">
             <Button
               className="text-white"
@@ -117,8 +124,9 @@ const Header: React.FC = () => {
           </div>
         </div>
       </div>
+      
       {isMenuOpen && (
-        <div className="md:hidden">
+        <div className="md:hidden relative z-10">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             {!userId ? (
               <>

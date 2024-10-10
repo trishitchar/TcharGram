@@ -150,16 +150,16 @@ export const getProfile = async (req, res) => {
 export const editProfile = async (req, res) => {
     try {
         const currentUserId = req.userId;
-        const userId = req.params.id;
+        // const userId = req.params.id; 
         const { bio, gender } = req.body;
         const profilePicture = req.file;
         // Check if the current user is trying to edit their own profile
-        if (currentUserId !== userId) {
-            return res.status(403).json({
-                message: 'You are not authorized to edit this profile.',
-                success: false,
-            });
-        }
+        // if (currentUserId !== userId) {
+        //   return res.status(403).json({
+        //     message: 'You are not authorized to edit this profile.',
+        //     success: false,
+        //   });
+        // }
         let cloudResponse;
         // If a profile picture is uploaded, process and upload it to Cloudinary
         if (profilePicture) {
@@ -172,7 +172,7 @@ export const editProfile = async (req, res) => {
             }
         }
         // Fetch the user by their ID and exclude the password field
-        const user = await User.findById(userId).select('-password');
+        const user = await User.findById(currentUserId).select('-password');
         // If the user does not exist, return a 404 error
         if (!user) {
             return res.status(404).json({

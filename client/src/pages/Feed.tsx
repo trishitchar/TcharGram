@@ -1,5 +1,5 @@
-import MainFeed from '@/components/middleFeed/MainFeed';
-import SuggestionPage from '@/components/rightFeed/SuggestionPage';
+import MainFeed from '@/components/feed/middleFeed/MainFeed';
+import SuggestionPage from '@/components/feed/rightFeed/SuggestionPage';
 import React from 'react';
 
 const Feed: React.FC = () => {

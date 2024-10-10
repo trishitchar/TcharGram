@@ -10,7 +10,7 @@ router.route('/register').post(register);
 router.route('/login').post(login);
 router.route('/logout').get(logout);
 router.route('/profile/:id').get(isTokenValid, getProfile);
-router.post('/profile/edit/:id', isTokenValid, upload.single('profilePicture'), editProfile);
+router.post('/profile/edit', isTokenValid, upload.single('profilePicture'), editProfile);
 router.route('/suggested').get(isTokenValid, getSuggestedUsers);
 router.route('/followorunfollow/:id').post(isTokenValid, followOrUnfollow);
 
