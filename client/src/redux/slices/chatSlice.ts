@@ -36,6 +36,10 @@ const chatSlice = createSlice({
         state.messages[action.payload.userId] = [action.payload.message];
       }
     },
+    addMessages: (state, action) => {
+      const { userId, messages } = action.payload;
+      state.messages[userId] = [...messages, ...state.messages[userId]];
+    },
     clearChat: (state) => {
       state.onlineUsers = [];
       state.messages = {};
@@ -43,5 +47,5 @@ const chatSlice = createSlice({
   },
 });
 
-export const { setOnlineUsers, setMessages, addMessage, clearChat } = chatSlice.actions;
+export const { setOnlineUsers, setMessages, addMessage, clearChat, addMessages } = chatSlice.actions;
 export default chatSlice.reducer;

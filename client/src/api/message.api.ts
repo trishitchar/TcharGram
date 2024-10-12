@@ -36,9 +36,9 @@ export async function sendmsg(receiverId: string, textMessage: string): Promise<
   }
 }
 
-export async function allmsg(receiverId: string): Promise<any> {
+export async function allmsg(receiverId: string, page: number = 1, limit: number = 20): Promise<any> {
   try {
-    const response = await authFetch(`/allmsg/${receiverId}`, {
+    const response = await authFetch(`/allmsg/${receiverId}?page=${page}&limit=${limit}`, {
       method: 'GET',
     });
     const responseData = await response.json();

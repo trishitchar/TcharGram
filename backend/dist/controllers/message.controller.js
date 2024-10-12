@@ -47,9 +47,19 @@ export const getMessage = async (req, res) => {
     try {
         const senderId = req.userId;
         const receiverId = req.params.id;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 20;
+        const skip = (page - 1) * limit;
         const conversation = await Conversation.findOne({
             participants: { $all: [senderId, receiverId] },
-        }).populate('messages');
+        }).populate({
+            path: 'messages',
+            options: {
+                sort: { createdAt: -1 }, // Sort by latest messages
+                skip: skip,
+                limit: limit,
+            }
+        });
         if (!conversation) {
             return res.status(200).json({ success: true, messages: [] });
         }

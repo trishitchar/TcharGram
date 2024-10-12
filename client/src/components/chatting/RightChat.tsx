@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, Send, UserIcon } from "lucide-react";
 import { allmsg, sendmsg } from "@/api/message.api";
 import { UserType } from "@/data/interface.data";
-import { addMessage, setMessages } from "@/redux/slices/chatSlice";
+import { addMessage, addMessages, setMessages } from "@/redux/slices/chatSlice";
 import { RootState } from "@/redux/store";
 
 interface RightChatProps {
@@ -39,9 +39,13 @@ const RightChat: React.FC<RightChatProps> = ({ selectedUser, onBack }) => {
       if (selectedUser) {
         setIsLoading(true);
         try {
-          const allmsgResponse = await allmsg(selectedUser._id);
+          const allmsgResponse = await allmsg(selectedUser._id,page);
           if (allmsgResponse.success) {
-            dispatch(setMessages({ userId: selectedUser._id, messages: allmsgResponse.messages }));
+            if (page === 1) {
+              dispatch(setMessages({ userId: selectedUser._id, messages: allmsgResponse.messages }));
+            } else {
+              dispatch(addMessages({ userId: selectedUser._id, messages: allmsgResponse.messages }));
+            }
           }
         } catch (error) {
           console.error('Error fetching messages:', error);
@@ -53,8 +57,8 @@ const RightChat: React.FC<RightChatProps> = ({ selectedUser, onBack }) => {
     };
 
     fetchMessages();
-    setPage(1); // Reset page when selecting a new user
-  }, [selectedUser, dispatch]);
+    // setPage(1); // Reset page when selecting a new user
+  }, [selectedUser, dispatch, page]);
 
   const handleSendMessage = useCallback(() => {
     if (message.trim() && socket && currentUser && selectedUser) {
