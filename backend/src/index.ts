@@ -34,11 +34,20 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.use("/api/user", userRoute);
-app.use("/api/post",  postRoute)
-app.use("/api/message",  messageRoute)
+app.use("/api/post",  postRoute);
+app.use("/api/message",  messageRoute);
 
-server.listen(`${process.env.PORT}`,()=>{
+const PORT = process.env.PORT || 8080;
+
+server.listen(`${PORT}`,()=>{
   connectDB();
   console.log(`server is running on port ${process.env.PORT}`);
   keepAlive();
-})
+});
+
+app.use((err: Error, req: Request, res: Response, next: Function) => {
+  console.error(err.stack);
+  res.status(500).send('Something went wrong!');
+});
+
+export { app, server };

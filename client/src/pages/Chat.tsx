@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { UserType } from '@/data/interface.data';
 import { setOnlineUsers, addMessage } from '@/redux/slices/chatSlice';
 import LeftChat from '@/components/chatting/LeftChat';
 import RightChat from '@/components/chatting/RightChat';
+
+type Message = any
 
 const Chat: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
@@ -13,6 +15,7 @@ const Chat: React.FC = () => {
   const user = useSelector((state: RootState) => state.auth.user);
 
   const [isMobileView, setIsMobileView] = useState(window.innerWidth < 768);
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobileView(window.innerWidth < 768);
@@ -22,6 +25,12 @@ const Chat: React.FC = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  const handleGetMessage = useCallback((data: Message) => {
+    dispatch(addMessage({
+      userId: data.senderId === user?._id ? data.receiverId : data.senderId,
+      message: data
+    }));
+  }, [dispatch, user]);
 
   useEffect(() => {
     if (socket && user) {
@@ -33,31 +42,17 @@ const Chat: React.FC = () => {
         dispatch(setOnlineUsers(users));
       });
 
-      // Listen for incoming messages
-      socket.on('getMessage', (data: {
-        senderId: string,
-        message: string,
-        _id: string,
-        createdAt: string
-      }) => {
-        dispatch(addMessage({
-          userId: data.senderId,
-          message: {
-            ...data,
-            receiverId: user._id,
-            isRead: false
-          }
-        }));
-      });
+      socket.on('getMessage', handleGetMessage);
     }
 
     return () => {
       if (socket) {
         socket.off('getUsers');
         socket.off('getMessage');
+        socket.off('addUser');
       }
     };
-  }, [socket, user, dispatch]);
+  }, [socket, user, dispatch, handleGetMessage]);
 
   const handleUserSelect = (user: UserType) => {
     setSelectedUser(user);

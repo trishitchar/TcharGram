@@ -5,7 +5,7 @@ interface Message {
   senderId: string;
   receiverId: string;
   message: string;
-  isRead: boolean;
+  // isRead: boolean;
   createdAt: string;
 }
 

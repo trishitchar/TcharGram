@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { User as UserIcon } from 'lucide-react';
@@ -11,7 +11,15 @@ interface LeftChatProps {
 const LeftChat: React.FC<LeftChatProps> = ({ onUserSelect }) => {
   const { users, loading, error } = useSelector((state: RootState) => state.suggestedUsers);
   const onlineUsers = useSelector((state: RootState) => state.chat.onlineUsers);
-  console.log("online users: ", onlineUsers);
+
+  const sortedUsers = useMemo(() => {
+    return [...users].sort((a, b) => {
+      const aOnline = onlineUsers.includes(a._id);
+      const bOnline = onlineUsers.includes(b._id);
+      if (aOnline === bOnline) return 0;
+      return aOnline ? -1 : 1;
+    });
+  }, [users, onlineUsers]);
 
   return (
     <div className="w-full h-full bg-white border-r border-gray-200 flex flex-col">
@@ -19,8 +27,8 @@ const LeftChat: React.FC<LeftChatProps> = ({ onUserSelect }) => {
       <div className="flex-grow overflow-y-auto">
         {loading && <p className="p-4 text-center">Loading...</p>}
         {error && <p className="p-4 text-center text-red-500">Error: {error}</p>}
-        {users.length > 0 ? (
-          users.map((user: UserType) => (
+        {sortedUsers.length > 0 ? (
+          sortedUsers.map((user: UserType) => (
             <div
               key={user._id}
               className="flex items-center p-4 hover:bg-gray-50 cursor-pointer"

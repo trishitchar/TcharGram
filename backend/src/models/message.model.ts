@@ -4,7 +4,7 @@ interface IMessage extends Document{
   senderId: mongoose.Types.ObjectId;
   receiverId: mongoose.Types.ObjectId;
   message: string;
-  isRead: boolean;
+//   isRead?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -26,10 +26,10 @@ const messageSchema: Schema<IMessage> = new mongoose.Schema(
             required: [true, 'a Message should be there'],
             trim: true
         },
-        isRead:{
-            type: Boolean,
-            default: false,
-        }
+        // isRead:{
+        //     type: Boolean,
+        //     default: false,
+        // }
     },{
         timestamps: true
     }

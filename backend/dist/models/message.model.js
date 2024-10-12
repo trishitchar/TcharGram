@@ -15,10 +15,10 @@ const messageSchema = new mongoose.Schema({
         required: [true, 'a Message should be there'],
         trim: true
     },
-    isRead: {
-        type: Boolean,
-        default: false,
-    }
+    // isRead:{
+    //     type: Boolean,
+    //     default: false,
+    // }
 }, {
     timestamps: true
 });

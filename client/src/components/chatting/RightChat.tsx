@@ -1,68 +1,106 @@
+import React, { useEffect, useRef, useState, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { ArrowLeft, Send, UserIcon } from "lucide-react";
 import { allmsg, sendmsg } from "@/api/message.api";
 import { UserType } from "@/data/interface.data";
 import { addMessage, setMessages } from "@/redux/slices/chatSlice";
 import { RootState } from "@/redux/store";
-import { ArrowLeft, Send, UserIcon } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 
 interface RightChatProps {
   selectedUser: UserType | null;
   onBack?: () => void;
 }
 
-const RightChat: React.FC<RightChatProps> = ({ selectedUser,onBack }) => {
+const RightChat: React.FC<RightChatProps> = ({ selectedUser, onBack }) => {
   const [message, setMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [page, setPage] = useState(1);
   const dispatch = useDispatch();
   const socket = useSelector((state: RootState) => state.socket.socket);
-  const user = useSelector((state: RootState) => state.auth.user);
+  const currentUser = useSelector((state: RootState) => state.auth.user);
   const chatMessages = useSelector((state: RootState) => 
-    state.chat.messages[selectedUser?._id || '']
+    state.chat.messages[selectedUser?._id || ''] || []
   );
   const onlineUsers = useSelector((state: RootState) => state.chat.onlineUsers);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
+  const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  }, []);
+
   useEffect(() => {
     scrollToBottom();
-  }, [chatMessages]);
+  }, [chatMessages, scrollToBottom]);
 
   useEffect(() => {
     const fetchMessages = async () => {
       if (selectedUser) {
-        const allmsgResponse = await allmsg(selectedUser._id);
-        if (allmsgResponse.success) {
-          dispatch(setMessages({ userId: selectedUser._id, messages: allmsgResponse.messages }));
+        setIsLoading(true);
+        try {
+          const allmsgResponse = await allmsg(selectedUser._id);
+          if (allmsgResponse.success) {
+            dispatch(setMessages({ userId: selectedUser._id, messages: allmsgResponse.messages }));
+          }
+        } catch (error) {
+          console.error('Error fetching messages:', error);
+          // Implement user feedback for error
+        } finally {
+          setIsLoading(false);
         }
       }
     };
 
     fetchMessages();
+    setPage(1); // Reset page when selecting a new user
   }, [selectedUser, dispatch]);
 
-  const handleSendMessage = async () => {
-    if (message.trim() && selectedUser && socket && user) {
-      // Emit the message through socket
-      socket.emit('sendMessage', {
-        senderId: user._id,
+  const handleSendMessage = useCallback(() => {
+    if (message.trim() && socket && currentUser && selectedUser) {
+      const newMessage = {
+        senderId: currentUser._id,
         receiverId: selectedUser._id,
-        message: message
-      });
+        message: message.trim(),
+        _id: Date.now().toString(),
+        createdAt: new Date().toISOString()
+      };
 
-      // Send message through API as well
-      const sendmsgResponse = await sendmsg(selectedUser._id, message);
-      if (sendmsgResponse.success) {
-        dispatch(addMessage({
-          userId: selectedUser._id,
-          message: sendmsgResponse.newMessage
-        }));
-        setMessage('');
-      }
+      // Dispatch to Redux store only once
+      dispatch(addMessage({
+        userId: selectedUser._id,
+        message: newMessage
+      }));
+
+      // Emit the message through socket
+      socket.emit('sendMessage', { message: newMessage });
+
+      // Clear the input field
+      setMessage('');
+
+      // Send the message to the server
+      sendmsg(selectedUser._id, newMessage.message).catch(error => {
+        console.error('Error sending message:', error);
+        // Implement user feedback for error
+      });
     }
-  };
+  }, [message, socket, currentUser, selectedUser, dispatch]);
+
+  const handleScroll = useCallback(() => {
+    const container = chatContainerRef.current;
+    if (container && container.scrollTop === 0 && !isLoading) {
+      // Load more messages when scrolled to top
+      setPage(prevPage => prevPage + 1);
+    }
+  }, [isLoading]);
+
+  useEffect(() => {
+    const container = chatContainerRef.current;
+    if (container) {
+      container.addEventListener('scroll', handleScroll);
+      return () => container.removeEventListener('scroll', handleScroll);
+    }
+  }, [handleScroll]);
 
   return (
     <div className="w-full h-full flex flex-col bg-white">
@@ -98,12 +136,16 @@ const RightChat: React.FC<RightChatProps> = ({ selectedUser,onBack }) => {
             </div>
           </div>
 
-          <div className="flex-grow overflow-y-auto p-4 space-y-4">
-            {chatMessages?.map((msg) => (
+          <div 
+            ref={chatContainerRef}
+            className="flex-grow overflow-y-auto p-4 space-y-4"
+          >
+            {isLoading && <div className="text-center">Loading...</div>}
+            {chatMessages.map((msg) => (
               <div
                 key={msg._id}
                 className={`p-2 rounded-lg max-w-xs ${
-                  msg.senderId === selectedUser._id ? 'bg-gray-100' : 'bg-blue-100 ml-auto'
+                  msg.senderId === currentUser?._id ? 'bg-blue-100 ml-auto' : 'bg-gray-100'
                 }`}
               >
                 {msg.message}
@@ -118,9 +160,9 @@ const RightChat: React.FC<RightChatProps> = ({ selectedUser,onBack }) => {
                 type="text"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                 placeholder="Type a message..."
                 className="flex-grow p-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
               />
               <button
                 onClick={handleSendMessage}
