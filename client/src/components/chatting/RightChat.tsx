@@ -66,7 +66,7 @@ const RightChat: React.FC<RightChatProps> = ({ selectedUser, onBack }) => {
         createdAt: new Date().toISOString()
       };
 
-      // Dispatch to Redux store only once
+      // Dispatch to Redux store immediately for instant feedback
       dispatch(addMessage({
         userId: selectedUser._id,
         message: newMessage
@@ -79,12 +79,14 @@ const RightChat: React.FC<RightChatProps> = ({ selectedUser, onBack }) => {
       setMessage('');
 
       // Send the message to the server
-      sendmsg(selectedUser._id, newMessage.message).catch(error => {
-        console.error('Error sending message:', error);
-        // Implement user feedback for error
-      });
+      sendmsg(selectedUser._id, newMessage.message)
+        .catch(error => {
+          console.error('Error sending message:', error);
+          // Implement user feedback for error
+          // Optionally, remove the message from Redux if it failed to send
+        });
     }
-  }, [message, socket, currentUser, selectedUser, dispatch,page]);
+  }, [message, socket, currentUser, selectedUser, dispatch]);
 
   const handleScroll = useCallback(() => {
     const container = chatContainerRef.current;
@@ -145,7 +147,9 @@ const RightChat: React.FC<RightChatProps> = ({ selectedUser, onBack }) => {
               <div
                 key={msg._id}
                 className={`p-2 rounded-lg max-w-xs ${
-                  msg.senderId === currentUser?._id ? 'bg-blue-100 ml-auto' : 'bg-gray-100'
+                  msg.senderId === currentUser?._id 
+                    ? 'bg-blue-100 ml-auto' 
+                    : 'bg-gray-100 mr-auto'
                 }`}
               >
                 {msg.message}

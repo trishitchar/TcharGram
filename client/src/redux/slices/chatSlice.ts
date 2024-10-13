@@ -31,7 +31,13 @@ const chatSlice = createSlice({
     },
     addMessage: (state, action: PayloadAction<{ userId: string; message: Message }>) => {
       if (state.messages[action.payload.userId]) {
-        state.messages[action.payload.userId].push(action.payload.message);
+        // Check for duplicates before adding
+        const isDuplicate = state.messages[action.payload.userId].some(
+          msg => msg._id === action.payload.message._id
+        );
+        if (!isDuplicate) {
+          state.messages[action.payload.userId].push(action.payload.message);
+        }
       } else {
         state.messages[action.payload.userId] = [action.payload.message];
       }

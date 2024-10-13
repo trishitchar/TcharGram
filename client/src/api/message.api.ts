@@ -29,7 +29,14 @@ export async function sendmsg(receiverId: string, textMessage: string): Promise<
       body: JSON.stringify({ textMessage }),
     });
     const responseData = await response.json();
-    return responseData;
+    if (responseData.success) {
+      return {
+        success: true,
+        message: responseData.message // Ensure the server returns the saved message
+      };
+    } else {
+      throw new Error(responseData.message || 'Failed to send message');
+    }
   } catch (error) {
     console.error('Error in sendmsg frontend API:', error);
     throw error;
