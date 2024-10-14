@@ -30,11 +30,12 @@ const Sidebar: React.FC = () => {
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
   const user = useSelector((state: RootState) => state.auth.user);
+  const { users } = useSelector((state: RootState) => state.suggestedUsers);
 
   const sidebarItems = [
     { icon: Home, text: "Home", path: '/feed' },
     { icon: Search, text: "Search", path: '/feed' },
-    { icon: Compass, text: "Explore", path: '/feed' },
+    { icon: Compass, text: "Explore", path: '/feed', action: () => navigate('/explore/people', { state: { users } }) },
     { icon: Film, text: "Reels", path: '/feed' },
     { icon: MessageSquare, text: "Messages", path: '/chat' },
     { icon: Heart, text: "Notifications", path: '/feed' },
