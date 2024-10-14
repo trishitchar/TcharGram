@@ -64,20 +64,22 @@ export const getMessage = async (req: AuthenticatedRequest, res: Response): Prom
         const senderId = req.userId;
         const receiverId = req.params.id;
 
-        const page = parseInt(req.query.page as string) || 1;
-        const limit = parseInt(req.query.limit as string) || 20;
-        const skip = (page - 1) * limit;
+        // const page = parseInt(req.query.page as string) || 1;
+        // const limit = parseInt(req.query.limit as string) || 20;
+        // const skip = (page - 1) * limit;
 
         const conversation = await Conversation.findOne({
             participants: { $all: [senderId, receiverId] },
-        }).populate({
-            path: 'messages',
-            options: {
-                sort: { createdAt: -1 }, // Sort by latest messages
-                skip: skip,
-                limit: limit,
-            }
-        });
+        })
+        // .populate({
+            // path: 'messages',
+            // options: {
+            //     sort: { createdAt: -1 }, // Sort by latest messages
+            //     skip: skip,
+            //     limit: limit,
+            // }
+        // });
+        .populate('messages')
 
         if (!conversation) {
             return res.status(200).json({ success: true, messages: [] });

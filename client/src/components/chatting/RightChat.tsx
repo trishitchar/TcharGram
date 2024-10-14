@@ -6,6 +6,7 @@ import { allmsg, sendmsg } from "@/api/message.api";
 import { UserType } from "@/data/interface.data";
 import { addMessage, setMessages } from "@/redux/slices/chatSlice";
 import { RootState } from "@/redux/store";
+import { formatDistanceToNow } from 'date-fns';
 
 interface RightChatProps {
   selectedUser: UserType | null;
@@ -138,6 +139,7 @@ const RightChat: React.FC<RightChatProps> = ({ selectedUser, onBack }) => {
             </div>
           </div>
 
+          {/* msg content */}
           <div 
             ref={chatContainerRef}
             className="flex-grow overflow-y-auto p-4 space-y-4"
@@ -148,11 +150,14 @@ const RightChat: React.FC<RightChatProps> = ({ selectedUser, onBack }) => {
                 key={msg._id}
                 className={`p-2 rounded-lg max-w-xs ${
                   msg.senderId === currentUser?._id 
-                    ? 'bg-blue-100 ml-auto' 
-                    : 'bg-gray-100 mr-auto'
+                  ? 'bg-blue-100 ml-auto' 
+                  : 'bg-gray-100 mr-auto'
                 }`}
-              >
+                >
                 {msg.message}
+                <p className="text-xs text-gray-500 mt-1">
+                  {formatDistanceToNow(new Date(msg.createdAt), { addSuffix: true })}
+                </p>
               </div>
             ))}
             <div ref={messagesEndRef} />
