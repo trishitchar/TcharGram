@@ -5,7 +5,3 @@
 ![Screenshot (10)](https://github.com/user-attachments/assets/c8a13cc8-ed70-43a6-8a09-84f250c86720)
 ![Screenshot (12)](https://github.com/user-attachments/assets/c57659fb-3202-4174-bea1-b42b3f70d84b)
 
-undefined user profile url thakle backend fail hoche
-extra `load more` tiple backend fail hoche
-multiple image upload
-if I've selected one image then keep an option to delete the select image

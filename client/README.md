@@ -16,9 +16,3 @@ client
       lib (shadcn component)
     public (static file like image etc)
 ```
-
-1. create all backend functonality in frontend 
-2. gender prefence option in frontend so can give one random userpic or can put random profile pic also np 
-3. nsfw check if possible
-4. nodemailer
-5. after tapping on profile section photoes one modal should pop up to show the photoes
