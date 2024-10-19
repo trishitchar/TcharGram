@@ -1,0 +1,6 @@
+Root DirectoryOptional - ./backend
+
+Build Command
+backend/ $ `npm install && npm run build`
+
+Start Command - `npm run start`
