@@ -22,7 +22,8 @@ import {
   Heart,
   PlusSquare,
   LogOut,
-  MoreHorizontal
+  MoreHorizontal,
+  BadgeCheck
 } from "lucide-react";
 
 const Sidebar: React.FC = () => {
@@ -40,6 +41,12 @@ const Sidebar: React.FC = () => {
     { icon: MessageSquare, text: "Messages", path: '/chat' },
     { icon: Heart, text: "Notifications", path: '/feed' },
     { icon: PlusSquare, text: "Create", action: () => setOpen(true) },
+    {
+      icon: BadgeCheck,
+      text: "Get Premium",
+      path: '/premium',
+      isPremium: true,
+    },
   ];
 
   const logOutHandler = async () => {
@@ -74,17 +81,22 @@ const Sidebar: React.FC = () => {
         </div>
 
         <nav className="space-y-1">
-          {sidebarItems.map(({ icon: Icon, text, path, action }) => (
-            <Button
-              key={text}
-              variant="ghost"
-              className="w-full justify-start gap-4 px-2 h-12"
-              onClick={() => action ? action() : navigate(path!)}
-            >
-              <Icon className="h-5 w-5" />
-              <span>{text}</span>
-            </Button>
-          ))}
+        {sidebarItems.map(({ icon: Icon, text, path, action, isPremium }) => (
+          <Button
+            key={text}
+            variant="ghost"
+            className={`w-full justify-start gap-4 px-2 h-12 ${
+              isPremium 
+                ? "bg-gradient-to-r from-pink-100 to-purple-100 hover:from-pink-200 hover:to-purple-200 text-purple-700"
+                : ""
+            }`}
+            onClick={() => action ? action() : navigate(path!)}
+          >
+            <Icon className={`h-5 w-5 ${isPremium ? "text-purple-500" : ""}`} />
+            <span>{text}</span>
+            {isPremium && <span className="ml-auto text-xs font-semibold text-purple-500">New</span>}
+          </Button>
+        ))}
 
           <Button
             variant="ghost"

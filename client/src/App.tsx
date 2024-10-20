@@ -16,6 +16,7 @@ import Feed from './pages/Feed';
 import ExplorePeoplePage from './components/feed/rightFeed/ExplorePeoplePage';
 import ProtectedLayout from './ProtectedLayout';
 import Chat from './pages/Chat';
+import PremiumCard from './components/premium/premiumCard';
 
 const ProtectedRoute: React.FC<{ element: React.ReactElement }> = ({ element }) => {
   const { isAuthenticated } = useAuth();
@@ -96,6 +97,10 @@ const App: React.FC = () => {
     }
   }, [currentUser, dispatch, handleReceiveMessage]);
 
+  const handlePurchase = () => {
+    console.log("Payment initiated!");
+  };
+
   return (
     <Routes>
       <Route path="/" element={<Landing />} />
@@ -107,6 +112,7 @@ const App: React.FC = () => {
         <Route path="profile/:userId" element={<Profile />} />
         <Route path="explore/people" element={<ExplorePeoplePage />} />
         <Route path="/chat" element={<Chat />} />
+        <Route path="/premium" element={<PremiumCard price={5} onPurchase={handlePurchase} />} />
         {/* <Route path="/direct/inbox" element={<Chat />} /> */}
       </Route>
 
