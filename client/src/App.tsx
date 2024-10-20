@@ -16,7 +16,7 @@ import Feed from './pages/Feed';
 import ExplorePeoplePage from './components/feed/rightFeed/ExplorePeoplePage';
 import ProtectedLayout from './ProtectedLayout';
 import Chat from './pages/Chat';
-import PremiumCard from './components/premium/premiumCard';
+import PremiumCard from './components/premium/PremiumCard.tsx';
 
 const ProtectedRoute: React.FC<{ element: React.ReactElement }> = ({ element }) => {
   const { isAuthenticated } = useAuth();
