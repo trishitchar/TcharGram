@@ -97,10 +97,6 @@ const App: React.FC = () => {
     }
   }, [currentUser, dispatch, handleReceiveMessage]);
 
-  const handlePurchase = () => {
-    console.log("Payment initiated!");
-  };
-
   return (
     <Routes>
       <Route path="/" element={<Landing />} />
@@ -112,8 +108,7 @@ const App: React.FC = () => {
         <Route path="profile/:userId" element={<Profile />} />
         <Route path="explore/people" element={<ExplorePeoplePage />} />
         <Route path="/chat" element={<Chat />} />
-        <Route path="/premium" element={<PremiumCard price={5} onPurchase={handlePurchase} />} />
-        {/* <Route path="/direct/inbox" element={<Chat />} /> */}
+        <Route path="/premium" element={<PremiumCard/>} />
       </Route>
 
       <Route path="*" element={<NotFound />} />
