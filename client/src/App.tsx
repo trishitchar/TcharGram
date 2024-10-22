@@ -16,6 +16,7 @@ import Feed from './pages/Feed';
 import ExplorePeoplePage from './components/feed/rightFeed/ExplorePeoplePage';
 import ProtectedLayout from './ProtectedLayout';
 import Chat from './pages/Chat';
+import PremiumCard from './components/premium/PremiumCard.tsx';
 
 const ProtectedRoute: React.FC<{ element: React.ReactElement }> = ({ element }) => {
   const { isAuthenticated } = useAuth();
@@ -107,7 +108,7 @@ const App: React.FC = () => {
         <Route path="profile/:userId" element={<Profile />} />
         <Route path="explore/people" element={<ExplorePeoplePage />} />
         <Route path="/chat" element={<Chat />} />
-        {/* <Route path="/direct/inbox" element={<Chat />} /> */}
+        <Route path="/premium" element={<PremiumCard/>} />
       </Route>
 
       <Route path="*" element={<NotFound />} />

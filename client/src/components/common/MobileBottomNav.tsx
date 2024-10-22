@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, MessageSquare, PlusSquare } from 'lucide-react';
+import { Home, MessageSquare, PlusSquare, BadgeCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
@@ -13,7 +13,7 @@ const MobileBottomNav: React.FC = () => {
   const [createOpen, setCreateOpen] = React.useState(false);
 
   return (
-    <div className="h-16 flex items-center justify-around px-4">
+    <div className="h-16 flex items-center justify-around px-4 bg-white border-t">
       <Button variant="ghost" size="icon" onClick={() => navigate('/feed')}>
         <Home className="h-6 w-6" />
       </Button>
@@ -24,6 +24,15 @@ const MobileBottomNav: React.FC = () => {
       
       <Button variant="ghost" size="icon" onClick={() => setCreateOpen(true)}>
         <PlusSquare className="h-6 w-6" />
+      </Button>
+      
+      <Button 
+        variant="ghost" 
+        size="icon" 
+        className="bg-gradient-to-r from-pink-100 to-purple-100 hover:from-pink-200 hover:to-purple-200"
+        onClick={() => navigate('/premium')}
+      >
+        <BadgeCheck className="h-6 w-6 text-purple-500" />
       </Button>
       
       <Button 
