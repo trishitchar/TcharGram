@@ -32,3 +32,9 @@ backend
 ```
 
 1. if you cannot find types of any particular package use ``` npm i --save-dev @types/<package name> ``` or you can add the format given in ```src/custom.declaration.ts```
+
+# docker
+- add the env according to your env
+- ```docker build -t tchargram-backend .```
+- ```docker images```
+- ```docker run -p 8080:8080 my-backend-app```

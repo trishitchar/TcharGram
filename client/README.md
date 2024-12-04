@@ -17,3 +17,7 @@ client
     public (static file like image etc)
 ```
 
+# note - if running locally both frontend and backend then first go to data.ts and change the value according to you
+- ```docker ps -a```
+- ```docker build -t tchargram-frontend .```
+- ```docker run -p 5173:5173 tchargram-frontend```
