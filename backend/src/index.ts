@@ -18,23 +18,25 @@ app.use(express.json()); //for parsing JSON data coming from frontend
 app.use(cookieParser()); //for parsing cookies
 app.use(urlencoded({extended:true})); // for parsing different types of url
 
-// replace with your frontend urls
-// const corsAllowOrigin = {
-//   origin: ['http://localhost:5173', 'https://tchargram.vercel.app', 'https://social-media-tchar.onrender.com'],
-//   credentials: true
-// };
-// app.use(cors(corsAllowOrigin));
-
-// CORS configuration allowing all origins
+// CORS configuration allowing specific domains
 const corsAllowOrigin = {
-  origin: function (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {
-    callback(null, true);
-  },
+  origin: ['http://localhost:5173', 'https://tchargram.vercel.app', 'https://social-media-tchar.onrender.com', 'https://tchargram.trishit.dev'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], 
   allowedHeaders: ['Content-Type', 'Authorization']
 };
 app.use(cors(corsAllowOrigin));
+
+// CORS configuration allowing all origins
+// const corsAllowOrigin = {
+//   origin: function (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {
+//     callback(null, true);
+//   },
+//   credentials: true,
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], 
+//   allowedHeaders: ['Content-Type', 'Authorization']
+// };
+// app.use(cors(corsAllowOrigin));
 
 // Root route
 app.get('/', (req: Request, res: Response) => {
