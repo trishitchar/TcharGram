@@ -3,8 +3,9 @@ import Post from './Post';
 import { getAllPosts } from '@/api/post.api';
 import { useDispatch, useSelector } from 'react-redux';
 import { addPosts } from '@/redux/slices/allPostSlice';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+// import { Alert, AlertDescription } from '@/components/ui/alert';
 import { RootState } from '@/redux/store';
+import toast from 'react-hot-toast';
 
 const Posts: React.FC = () => {
   const dispatch = useDispatch();
@@ -13,19 +14,20 @@ const Posts: React.FC = () => {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  // const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
       setLoading(true);
-      setError(null);
+      // setError(null);
       try {
         const response = await getAllPosts(page, 10);
         if (response.success && response.posts) {
           if (response.posts.length === 0) {
             setHasMore(false);
             if (page === 1) {
-              setError('No posts available.');
+              // setError('No posts available.');
+              toast.error('No posts available.');
             }
           } else {
             dispatch(addPosts(response.posts));
@@ -38,13 +40,15 @@ const Posts: React.FC = () => {
           if (error.message.includes('404')) {
             setHasMore(false);
             if (page === 1) {
-              setError('No posts available.');
+              // setError('No posts available.');
+              toast.error('No posts available.');
             }
           } else {
-            setError('Mmaybe You all cought up ' + error.message);
+            // setError('Maybe You all caught up ' + error.message);
+            toast.error('Maybe You all caught up ' + error.message);
           }
         } else {
-          setError('An unexpected error occurred.');
+          toast.error('An unexpected error occurred.');
         }
       } finally {
         setLoading(false);
@@ -62,11 +66,11 @@ const Posts: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4">
-      {error && (
+      {/* {error && (
         <Alert variant="destructive" className="mb-4">
           <AlertDescription>{error}</AlertDescription>
         </Alert>
-      )}
+      )} */}
       
       {posts.map((post) => (
         <Post key={post._id} post={post} />
